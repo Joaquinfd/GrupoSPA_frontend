@@ -1,0 +1,75 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  height: 200px;
+  width: 100px;
+  background-color: lightblue;
+  border-radius: 5px;
+  padding: 2em;
+  margin: 50px;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+.card-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.navigation {
+  display: flex;
+  flex-direction: row;
+  background-color: grey;
+  height: 100px;
+  width: 800px;
+  border-radius: 10px;
+}
+
+.boton-nav {
+  margin: 5px;
+  background-color: red;
+  border-radius: 5px;
+}
+
+.boton-nav-inicio {
+  margin: 5px;
+  background-color: white;
+  background-image: url('public/logo_inicio.png');
+  background-size: 100%;
+  border-radius: 5px;
+}
