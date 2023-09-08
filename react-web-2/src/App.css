@@ -34,9 +34,42 @@
 }
 
 .card {
+  height: 200px;
+  width: 100px;
+  background-color: lightblue;
+  border-radius: 5px;
   padding: 2em;
+  margin: 50px;
 }
 
 .read-the-docs {
   color: #888;
+}
+
+.card-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.navigation {
+  display: flex;
+  flex-direction: row;
+  background-color: grey;
+  height: 100px;
+  width: 800px;
+  border-radius: 10px;
+}
+
+.boton-nav {
+  margin: 5px;
+  background-color: red;
+  border-radius: 5px;
+}
+
+.boton-nav-inicio {
+  margin: 5px;
+  background-color: white;
+  background-image: url('public/logo_inicio.png');
+  background-size: 100%;
+  border-radius: 5px;
 }

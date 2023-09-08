@@ -1,1 +1,0 @@
-# grupo_GrupoSPA_frontend
