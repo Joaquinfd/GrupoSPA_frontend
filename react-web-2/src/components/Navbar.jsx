@@ -1,19 +1,15 @@
-// Navbar.js 
-export default function Navbar() {
-    return (
-      <nav className="navigation">
-        <a href="/" className="boton-nav-inicio">
-          foto-logo-inicio
-        </a>
-        <a href="/" className="boton-nav">
-          Objetivo
-        </a>
-        <a href="/" className="boton-nav">
-          Sobre nosotros
-        </a>
-          
-        
-        
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import './Navbar.css';
+
+function Navbar() {
+  return (
+    <header>
+      <nav className="navbar">
+      
       </nav>
+    </header>
   );
 }
+
+export default Navbar;

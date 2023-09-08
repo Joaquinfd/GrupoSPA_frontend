@@ -10,36 +10,30 @@ function App() {
 
   const abc = 'abcdefghijklmnñopqrstuvwxyz'
   const [letter, setAbc] = useState(0);
-
   const [count, setCount] = useState(0);
 
   return (
-    <>
-
       <div>
-        <Navbar />
-        
-      </div>
+        <Navbar/>
+        <div className='card-container'> 
+          <div className="card">
+            <h1>N°</h1>
+            <h2>{count}</h2>
+            <button onClick={() => setCount((count) => count + 1)}>
+              click
+            </button>
+          </div>
 
-      <div className='card-container'> 
-        
-        <div className="card">
-          <h1>N°</h1>
-          <h2>{count}</h2>
-          <button onClick={() => setCount((count) => count + 1)}>
-            click
-          </button>
-        </div>
-
-        <div className='card'>
-          <h1>ABC</h1>
-          <h2>{abc[letter]}</h2>
-          <button onClick={() => {if (letter < 26) {setAbc((letter) => letter + 1)}}}>
-            click
-          </button>
+          <div className='card'>
+            <h1>ABC</h1>
+            <h2>{abc[letter]}</h2>
+            <button onClick={() => {if (letter < 26) {setAbc((letter) => letter + 1)}}}>
+              click
+            </button>
+          </div>
         </div>
       </div>
-    </>
+
   )
 }
 
