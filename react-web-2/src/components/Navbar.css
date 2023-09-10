@@ -1,28 +1,101 @@
-/* Navbar.css */
 .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: #333; /* Color de fondo de la navbar */
-    color: #fff; /* Color del texto */
-  }
-  
-  .logo img {
-    width: 40px; /* Ajusta el tamaño de tu logo según tus necesidades */
-    margin-right: 10px;
-  }
-  
-  .nav-links {
-    list-style-type: none;
-    display: flex;
-  }
-  
-  .nav-links li {
-    margin-right: 20px;
-  }
-  
-  .nav-links a {
-    text-decoration: none;
-    color: #fff; /* Color de enlace */
-  }
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: black; /* Cambia el color de fondo según tu diseño */
+  color: white;
+  z-index: 1000;
+  font-family: Arial, sans-serif;
+  padding:8px 0px;
+  text-align: center;
+  display: flex; /* Usamos flexbox para alinear las opciones de navegación horizontalmente */
+  justify-content: space-between; /* Espaciado uniforme entre los elementos */
+  align-items: center; /* Centra verticalmente los elementos */
+  height: 55px;
+}
+
+/* Estilo de las opciones de navegación */
+.navbar ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex; /* Alinea las opciones de navegación horizontalmente */
+}
+
+.navbar li {
+  margin-right: 20px; /* Espacio entre las opciones de navegación */
+}
+
+.navbar a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  transition: color 0.3s; /* Agregamos una transición al color de texto */
+}
+
+.navbar a:hover {
+  color: red; /* Cambia el color de texto al pasar el mouse */
+}
+
+.logo {
+  display: flex;
+  align-items: center; /* Centra verticalmente los elementos en el contenedor */
+}
+.logo img {
+  width: 120px;
+  height: auto;
+  filter: invert(100%);
+}
+
+
+.logo:hover img {
+  filter: invert(85%);
+}
+
+/*Código con ayuda de ChatGPT*/
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropbtn {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #333; /* Color de fondo del dropdown */
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  border-top: 1px solid #444; /* Borde superior del dropdown */
+  border-left: 1px solid #444; /* Borde izquierdo del dropdown */
+  border-right: 1px solid #444; /* Borde derecho del dropdown */
+}
+
+.dropdown-content a {
+  color: white;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  transition: background-color 0.3s; /* Transición del color de fondo */
+}
+
+.dropdown-content a:hover {
+  background-color: #444; /* Cambia el color de fondo al pasar el mouse */
+}
+
+.dropdown:hover .dropdown-content {
+  display: block; /* Muestra el dropdown al pasar el mouse sobre el enlace principal */
+}
+
+.dropdown:hover .dropbtn {
+  color: red; /* Cambia el color del enlace principal al pasar el mouse */
+}
