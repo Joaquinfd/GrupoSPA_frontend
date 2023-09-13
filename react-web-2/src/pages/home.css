@@ -1,0 +1,88 @@
+.main-container {
+    width: 100%;
+    margin: 0;
+  }
+  
+.home-main-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 800px;
+  align-items: center;
+}
+
+.home-container h1 {
+  color: whitesmoke;
+  animation: shine 5s infinite alternate;
+}
+
+.presentation-container {
+  height: 100%;
+  width: 80%;
+  background-color: transparent;
+  border-radius: 50px;
+  align-self: center;
+  background-size: cover;
+  max-height: 500px;
+}
+
+.home-container {
+  border-radius: 10px;
+  height: auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-top: 50px;
+}
+
+.lista-features {
+  height: 80%;
+}
+
+.slide {
+  max-height: 500px;
+  width: 100%;
+}
+
+.boton-registro {
+  width: 100%;
+  height: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: red;
+  cursor: pointer;
+  border-radius: 50px;
+  border: 5px solid whitesmoke;
+}
+
+.boton-registro:active {
+  background-color: gray; /* Cambia el color de fondo al hacer clic */
+  outline: none; /* Elimina el contorno predeterminado al hacer clic */
+}
+
+/*GPT*/
+.image-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.5); /* Fondo semitransparente para el texto */
+  color: white; /* Color del texto */
+  padding: 10px; /* Espacio alrededor del texto */
+  font-size: 18px; /* Tamaño del texto */
+}
+
+/**/
+
+.carousel {
+  border-radius: 50px;
+  background-color: red;
+}
+
+.carousel.carousel-slider {
+  background-color: transparent;
+  border-bottom-left-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+

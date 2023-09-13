@@ -1,0 +1,84 @@
+/* instructions.css Hecho con guía de ChatGPT*/
+
+/* Estilo general de la página de instrucciones */
+  .instructions-page {
+    background-color: black;
+    color: white;
+    font-family: 'Times New Roman', Times, serif;
+    padding: 20px;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left:0;
+    margin-top: 60px;
+
+    position: fixed;
+    text-align: center;
+    overflow-y: auto;
+  }
+  
+  .instructions-page h1 {
+    color: red;
+  }
+  
+  .instructions-page h2 {
+    color: #333;
+    margin-top: 20px;
+  }
+  
+  .instructions-page p {
+    margin-top: 10px;
+  }
+  
+  /* Estilo de los pasos */
+  .instructions-page h2::before {
+    content: "➤ ";
+  }
+  
+  
+  /* Estilo del encabezado de pasos */
+  .instructions-page h2 {
+    color: red;
+    margin-top: 20px;
+    border-bottom: 2px solid transparent; /* Cambiamos el borde a transparente inicialmente */
+    padding-bottom: 5px;
+    transition: border-bottom 0.3s; /* Agregamos transición para el efecto */
+    cursor: pointer; /* Cambiamos el cursor al pasar el mouse */
+  }
+  
+  /* Aplicar el efecto al pasar el mouse */
+  .instructions-page h2:hover {
+    border-bottom: 2px solid red; /* Cambiamos el borde a rojo al pasar el mouse */
+  }
+  
+  /* Estilo del encabezado principal */
+  .instructions-page h1 {
+    color: red;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    animation: shine 5s infinite alternate; /* Agregamos la animación 'shine' */
+  }
+  
+  /* Definimos la animación 'shine' usando keyframes */
+  @keyframes shine {
+    0% {
+      color: red; /* Empieza en rojo */
+    }
+    66% {
+      color: white; /* Al 66%, cambia a plateado */
+    }
+    100% {
+      color: red; /* Regresa a rojo al final */
+    }
+  }
+  
+  .instructions-page .step p {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+  }
+  
+  .instructions-page .step.active p {
+    max-height: 500px; /* Ajusta la altura máxima según necesidades */
+  }
+  
