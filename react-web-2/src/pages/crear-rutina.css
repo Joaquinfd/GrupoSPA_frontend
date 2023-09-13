@@ -1,0 +1,53 @@
+.rutinas-container {
+    font-family: 'Roboto Condensed', Arial, sans-serif;
+    background-color: #222; 
+    color: #fff; 
+    padding: 20px;
+    margin: 55px auto 0;
+    width: 1000px;
+    z-index: 1;
+    position: relative;
+  }
+  .body-container::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: black;
+    z-index: -1; /*Para indicar que va más atrás*/
+  }
+
+  
+
+  .rutinas-container h2 {
+    font-size: 36px; 
+    font-weight: bold;
+    text-transform: uppercase; /* Convierte el texto a mayúsculas */
+  }
+  
+  /* Estilos para los párrafos */
+  .rutinas-container p {
+    font-size: 20px; 
+    line-height: 1.5; /* Espaciado entre líneas más amplio para una mejor legibilidad */
+  }
+
+/*Hecho con ayuda de ChatGPT*/
+  .guardar-button {
+    background-color: #4CAF50; 
+    color: #fff; 
+    padding: 15px 20px; 
+    margin-top: 30px;
+    border: none; 
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar por encima */
+    transition: background-color 0.3s, box-shadow 0.3s; /* Transición suave de color de fondo y sombra */
+  
+    
+    &:hover {
+      background-color: #45a049; /* Color de fondo verde ligeramente más oscuro */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Sombra ligera al pasar por encima */
+      transform: translateY(-5px);
+    }
+  }
