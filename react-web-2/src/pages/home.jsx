@@ -30,8 +30,9 @@ export default function Home() {
             <div className="home-container" id='home-div-hc'>
                 <h1>Mensaje bienvenida</h1>
                 <div className="presentation-container" id='home-div-pc'>
-                    <Carousel useKeyboardArrows={false} className='carousel' id='home-carousel' >
-                        {images.map((imageData, index) => (
+
+                    <Carousel useKeyboardArrows={false} className='carousel' id='home-carousel'>
+        {images.map((imageData, index) => (
                         <div className="slide" key={index}>
                             <img alt="image-container" src={imageData.url} />
                             {/* siguiente div con gpt */}

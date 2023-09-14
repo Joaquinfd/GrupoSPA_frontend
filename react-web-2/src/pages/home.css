@@ -1,8 +1,8 @@
 .main-container {
-    width: 100%;
-    margin: 0;
-  }
-  
+  width: 100%;
+  margin: 0;
+}
+
 .home-main-container {
   display: flex;
   flex-direction: column;
@@ -60,6 +60,12 @@
 .boton-registro:active {
   background-color: gray; /* Cambia el color de fondo al hacer clic */
   outline: none; /* Elimina el contorno predeterminado al hacer clic */
+  border-color: none;
+}
+
+.boton-registro:hover {
+  outline: none; /* Elimina el contorno predeterminado al hacer clic */
+  border-color: transparent;
 }
 
 /*GPT*/
@@ -87,3 +93,6 @@
   border-bottom-right-radius: 0px;
 }
 
+.carousel-status {
+  display: none !important;
+}
