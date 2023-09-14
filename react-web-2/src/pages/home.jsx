@@ -17,7 +17,7 @@ export default function Home() {
         },
         {
             url: "images/home-image-2.jpg",
-            text: "No pain, no gain. ¡A entrenar!",
+            text: "No pain, no gain ¡A entrenar!",
         },
         {
             url: "images/mujer_corredora_home.jpg",
