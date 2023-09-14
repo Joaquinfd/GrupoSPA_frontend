@@ -96,3 +96,32 @@
     background-color: yellow;
 }
 
+.rbc-month-row {
+    overflow: visible !important;
+}
+
+.rbc-calendar .event.expanded {
+    z-index: 100000000 !important;
+
+}
+
+.rbc-calendar .rbc-date-cell {
+    z-index: 0 !important;
+}
+
+.rbc-row-content {
+    z-index: auto !important;
+}
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  

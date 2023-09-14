@@ -4,6 +4,7 @@ import 'moment/locale/es';
 import './planner.css';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import CustomEvent from '../components/Customevent';
 
 function Planner() {
 
@@ -14,16 +15,19 @@ function Planner() {
           title: 'Rutina push',
           start: new Date(2023, 8, 11, 10, 0), // Año, mes (0-11), día, hora, minuto
           end: new Date(2023, 8, 11, 12, 0),
+          ejercicios: ['Press de banca', 'Press militar', 'Extension de triceps', 'Fondos en paralelas']
         },
         {
             title: 'Rutina pull',
             start: new Date(2023, 8, 13, 10, 0), // Año, mes (0-11), día, hora, minuto
             end: new Date(2023, 8, 13, 12, 0),
+            ejercicios: ['Dominadas', 'Remo con barra', 'Curl de biceps', 'Curl de antebrazo']
         },
         {
             title: 'Rutina legs',
             start: new Date(2023, 8, 15, 10, 0), // Año, mes (0-11), día, hora, minuto
             end: new Date(2023, 8, 15, 12, 0),
+            ejercicios: ['Sentadillas', 'Peso muerto', 'Extension de cuadriceps', 'Curl de femoral']
         },
       ];
     
@@ -38,6 +42,9 @@ function Planner() {
                     events={eventos}
                     startAccessor="start"
                     endAccessor="end"
+                    components={{
+                        event: CustomEvent,
+                    }}
                 />
             
             </div>
