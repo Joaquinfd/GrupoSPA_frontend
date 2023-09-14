@@ -1,0 +1,44 @@
+/* notificaciones.css */
+
+.Notificaciones {
+    display: flex;
+    flex-direction: column; /* Alinea los elementos en columna */
+    align-items: center; /* Alinea los elementos horizontalmente al centro si es necesario */
+  }
+  
+  .Dias {
+    display: flex;
+    flex-direction: column; /* Alinea los elementos en columna dentro de la sección de días */
+    align-items: center; /* Alinea los elementos horizontalmente al centro si es necesario */
+    border: 3px solid #010101; /* Añade un borde de 1px de color naranja */
+    
+
+}
+
+
+.volver{
+    margin-top: 10px;
+}
+
+.volver button{
+    background-color: transparent;
+    border: 3px solid #010101;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.volver a{
+
+    color: #010101;
+}
+
+.volver button:hover a{
+    color: #ff5722;
+    
+}
+
+.volver button:hover {
+    
+    background-color: #090a0a; /* Color de fondo del botón */
+}
+

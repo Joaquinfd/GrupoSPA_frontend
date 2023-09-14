@@ -4,7 +4,7 @@
   .instructions-page {
     background-color: black;
     color: white;
-    font-family: Arial, sans-serif;
+    font-family: 'Times New Roman', Times, serif;
     padding: 20px;
     top: 0;
     bottom: 0;
@@ -82,3 +82,6 @@
     max-height: 500px; /* Ajusta la altura máxima según necesidades */
   }
   
+  .checker{
+    align-self: right;
+  }
