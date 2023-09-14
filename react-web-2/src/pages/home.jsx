@@ -26,11 +26,11 @@ export default function Home() {
     ];
 
     return (
-        <div className="home-main-container">
-            <div className="home-container">
+        <div className="home-main-container" id='home-div-hmc'>
+            <div className="home-container" id='home-div-hc'>
                 <h1>Mensaje bienvenida</h1>
-                <div className="presentation-container">
-                    <Carousel useKeyboardArrows={false} className='carousel'>
+                <div className="presentation-container" id='home-div-pc'>
+                    <Carousel useKeyboardArrows={false} className='carousel' id='home-carousel' >
                         {images.map((imageData, index) => (
                         <div className="slide" key={index}>
                             <img alt="image-container" src={imageData.url} />
@@ -41,7 +41,7 @@ export default function Home() {
                         {/* src: https://cloudinary.com/blog/add-a-responsive-image-carousel-to-your-react-app */}
                     </Carousel>
                     <Link to="/ingreso">
-                        <button className='boton-registro'>
+                        <button className='boton-registro' id='home-button-br'>
                             <h2>Inicia sesión / Registrate</h2>
                         </button>
                     </Link>

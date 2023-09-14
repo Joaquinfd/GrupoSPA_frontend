@@ -11,20 +11,29 @@ function Planner() {
 
     const eventos = [
         {
-          title: 'Evento 1',
-          start: new Date(2023, 8, 15, 10, 0), // Año, mes (0-11), día, hora, minuto
-          end: new Date(2023, 8, 15, 12, 0),
+          title: 'Rutina push',
+          start: new Date(2023, 8, 11, 10, 0), // Año, mes (0-11), día, hora, minuto
+          end: new Date(2023, 8, 11, 12, 0),
         },
-        // Otros eventos aquí
+        {
+            title: 'Rutina pull',
+            start: new Date(2023, 8, 13, 10, 0), // Año, mes (0-11), día, hora, minuto
+            end: new Date(2023, 8, 13, 12, 0),
+        },
+        {
+            title: 'Rutina legs',
+            start: new Date(2023, 8, 15, 10, 0), // Año, mes (0-11), día, hora, minuto
+            end: new Date(2023, 8, 15, 12, 0),
+        },
       ];
     
     return (
 
-        <div className='main-planner-container'>
+        <div className='main-planner-container' id='planner-div-mpc'>
                 <h1>Planner</h1>
-            <div className='planner-container'>
+            <div className='planner-container' id='planner-div-pc'>
                 
-                <Calendar
+                <Calendar id='planner-calendar'
                     localizer={localizer}
                     events={eventos}
                     startAccessor="start"

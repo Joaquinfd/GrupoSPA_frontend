@@ -49,16 +49,17 @@
 }
 
 .rbc-day-bg.rbc-today {
-    background-color: red;
-}
-
-.rbc-day-bg.rbc-off-range-bg {
     background-color: maroon;
 }
 
+.rbc-day-bg.rbc-off-range-bg {
+    background-color: grey;
+    opacity: 0.7;
+}
+
 .rbc-day-slot.rbc-time-column.rbc-now.rbc-today {
-    background-color: red;
-    opacity: 0.5;
+    background-color: maroon;
+    opacity: 1;
 }
 
 .rbc-header.rbc-today {
@@ -71,12 +72,11 @@
 }
 
 .rbc-event, .rbc-day-slot .rbc-background-event {
-    background-color: #ff0000 !important; 
+    background-color: red !important;
 }
 
 .rbc-toolbar.rbc-toolbar button {
     color: white; 
-    
 }
 
 
@@ -90,5 +90,9 @@
 
 .rbc-events-container {
     background-color: transparent;
+}
+
+.rbc-current-time-indicator.rbc-current-time-indicator {
+    background-color: yellow;
 }
 
