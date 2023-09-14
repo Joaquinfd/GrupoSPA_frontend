@@ -82,3 +82,6 @@
     max-height: 500px; /* Ajusta la altura máxima según necesidades */
   }
   
+  .checker{
+    align-self: right;
+  }

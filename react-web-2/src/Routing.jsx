@@ -6,6 +6,7 @@ import Ingreso from './pages/ingreso';
 import Perfil from './pages/perfil';
 import Images from './pages/crear-rutina';
 import Planner from './pages/planner';
+import Notificaciones from './pages/notificaciones';
 
 
 function Routing(){
@@ -19,6 +20,7 @@ function Routing(){
                 <Route path={"/mi-perfil"} element={<Perfil/>}/>
                 <Route path={"/planner"} element={<Planner/>}/>
                 <Route path={"/crear-rutina"} element={<Images/>}/>
+                <Route path={"/notificaciones"} element={<Notificaciones/>}/>   
             </Routes>
         </BrowserRouter>
     )
