@@ -1,5 +1,7 @@
 import React, { useState, useEffect  } from 'react';
 import './crear-rutina.css';
+import { NavLink } from 'react-router-dom';
+
 
 import Button from '../components/button'; 
 import Image from '../components/images';
@@ -132,8 +134,8 @@ function Images() {
         </div>)}
         
         </div>
-        {allFieldsCompleted && <button className='guardar-button'>Guardar</button>}
-        </div>
+        {allFieldsCompleted && (<NavLink to="/mi-perfil" className="guardar-button-link"><button className="guardar-button">Guardar</button></NavLink>
+)}        </div>
 
     );
   }
