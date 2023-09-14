@@ -12,10 +12,10 @@ function Planner() {
 
     const eventos = [
         {
-          title: 'Rutina push',
-          start: new Date(2023, 8, 11, 10, 0), // Año, mes (0-11), día, hora, minuto
-          end: new Date(2023, 8, 11, 12, 0),
-          ejercicios: ['Press de banca', 'Press militar', 'Extension de triceps', 'Fondos en paralelas']
+            title: 'Rutina push',
+            start: new Date(2023, 8, 11, 10, 0), // Año, mes (0-11), día, hora, minuto
+            end: new Date(2023, 8, 11, 12, 0),
+            ejercicios: ['Press de banca', 'Press militar', 'Extension de triceps', 'Fondos en paralelas']
         },
         {
             title: 'Rutina pull',
