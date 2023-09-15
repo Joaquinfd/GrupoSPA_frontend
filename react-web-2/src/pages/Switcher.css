@@ -1,0 +1,36 @@
+
+.switcher {
+    display: flex; /* Utiliza flexbox para alinear horizontalmente */
+    align-items: center; /* Alinea verticalmente al centro si es necesario */
+    /* Otros estilos para el contenedor principal */
+     /* Añade un borde de 1px de color naranja */
+    width: 120px;
+    height: 50px;
+    
+  
+    }
+  
+  .switcher-content {
+    display: flex; /* Utiliza flexbox para los elementos internos */
+    align-items: center; /* Alinea los elementos internos verticalmente al centro */
+    border: 1px solid #010101;
+}
+  
+  .texto {
+    /* Estilos para el elemento "Texto" */
+    margin-left: 20px;
+    color: white;
+    
+  }
+  
+  .checker {
+    /* Estilos para el elemento "Checker" */
+    margin-right: 20px;  
+    margin-top: 5px; /* Añade un pequeño margen superior */
+
+  }
+
+  .switcher.selected .checker input[type="checkbox"]:checked + label::before {
+    background-color: black; /* Cambia el color del "checker" a negro */
+  }
+
