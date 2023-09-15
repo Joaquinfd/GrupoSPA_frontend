@@ -4,8 +4,9 @@ import Navbar from './components/Navbar';
 import Instructions from './pages/instrucciones';
 import Ingreso from './pages/ingreso';
 import Perfil from './pages/perfil';
-import Rutinas from './pages/crear-rutina';
+import Images from './pages/crear-rutina';
 import Planner from './pages/planner';
+import Notificaciones from './pages/notificaciones';
 
 
 function Routing(){
@@ -18,7 +19,8 @@ function Routing(){
                 <Route path={"/ingreso"} element={<Ingreso/>}/>
                 <Route path={"/mi-perfil"} element={<Perfil/>}/>
                 <Route path={"/planner"} element={<Planner/>}/>
-                <Route path={"/crear-rutina"} element={<Rutinas/>}/>
+                <Route path={"/crear-rutina"} element={<Images/>}/>
+                <Route path={"/notificaciones"} element={<Notificaciones/>}/>   
             </Routes>
         </BrowserRouter>
     )
