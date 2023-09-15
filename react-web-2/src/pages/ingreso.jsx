@@ -10,7 +10,7 @@ function Ingreso() {
 
     const handleSignUpClick = () => {
     setShowAdditionalInputs(!showAdditionalInputs);
-    setButtonText(showAdditionalInputs ? 'Registrarse' : 'Tienes cuenta? Inicia sesión');
+    setButtonText(showAdditionalInputs ? 'No tienes sesión? Registrate' : 'Tienes cuenta? Inicia sesión');
     };
 
     return (
@@ -48,6 +48,7 @@ function Ingreso() {
                         </select>
                     </div>
                     )}
+                    <button type='submit' className='ingreso-submit-form'>Entrar</button>
                     <button type='button' onClick={handleSignUpClick} className='ingreso-boton-registro'>
                         {buttonText}
                     </button>

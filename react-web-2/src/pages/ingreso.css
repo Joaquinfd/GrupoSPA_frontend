@@ -61,3 +61,22 @@
     height: 30px;
     border-radius: 5px;
 }
+
+.ingreso-submit-form {
+    background-color: red; 
+    color: #fff; 
+    padding: 15px 20px; 
+    size: 10px;
+    margin-top: 30px;
+    border: none; 
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar por encima */
+    transition: background-color 0.3s, box-shadow 0.3s;
+
+    &:hover {
+        background-color: #45a049; /* Color de fondo verde ligeramente más oscuro */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Sombra ligera al pasar por encima */
+        transform: translateY(-5px);
+      }
+}
+
