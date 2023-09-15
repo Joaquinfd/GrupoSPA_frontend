@@ -13,14 +13,14 @@ function Planner() {
     const eventos = [
         {
             title: 'Rutina push',
-            start: new Date(2023, 8, 11, 10, 0), // Año, mes (0-11), día, hora, minuto
-            end: new Date(2023, 8, 11, 12, 0),
+            start: new Date(2023, 8, 12, 10, 0), // Año, mes (0-11), día, hora, minuto
+            end: new Date(2023, 8, 12, 12, 0),
             ejercicios: ['Press de banca', 'Press militar', 'Extension de triceps', 'Fondos en paralelas']
         },
         {
             title: 'Rutina pull',
-            start: new Date(2023, 8, 13, 10, 0), // Año, mes (0-11), día, hora, minuto
-            end: new Date(2023, 8, 13, 12, 0),
+            start: new Date(2023, 8, 14, 10, 0), // Año, mes (0-11), día, hora, minuto
+            end: new Date(2023, 8, 14, 12, 0),
             ejercicios: ['Dominadas', 'Remo con barra', 'Curl de biceps', 'Curl de antebrazo']
         },
         {
