@@ -1,0 +1,18 @@
+  /* Estilos para el componente CustomEvent */
+.event {
+    position: relative;
+    cursor: pointer;
+    /* Estilos normales del evento aquí */
+  }
+  
+  /* Estilos para el evento expandido */
+  .event.expanded {
+    position: absolute;
+    z-index: 1000 !important; /* Ajusta el valor según sea necesario para estar por encima de otros elementos */
+    background-color: red;
+    border-radius: 5px;
+    border: 5px solid black;
+    padding: 10px;
+  }
+  
+  

@@ -1,0 +1,24 @@
+.button {
+    background-color: #007bff; /* Color de fondo inicial */
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px; /* Aumenta el radio del borde para redondear los botones */
+    font-size: 18px;
+    margin-bottom: 10px;
+    transition: background-color 0.3s ease; /* Agrega una transición suave al cambio de color de fondo */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Agrega una sombra suave */
+  }
+  
+  .button:hover {
+    background-color: red; /* Color de fondo al pasar el cursor */
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.3); /* Aumenta la intensidad de la sombra al pasar el cursor */
+  }
+
+  .selected-button {
+    background-color: #ff0000; /* Cambia el color de fondo seleccionado */
+    color: #fff; /* Cambia el color del texto seleccionado */
+    box-shadow: 0px 0px 20px rgba(255, 0, 0, 0.5); /* Cambia la sombra al seleccionado */
+  }
