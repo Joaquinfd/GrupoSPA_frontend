@@ -6,6 +6,7 @@
      /* Añade un borde de 1px de color naranja */
     width: 120px;
     height: 50px;
+    
   
     }
   
@@ -18,7 +19,7 @@
   .texto {
     /* Estilos para el elemento "Texto" */
     margin-left: 20px;
-    color: #000000
+    color: white;
     
   }
   
@@ -32,3 +33,4 @@
   .switcher.selected .checker input[type="checkbox"]:checked + label::before {
     background-color: black; /* Cambia el color del "checker" a negro */
   }
+
