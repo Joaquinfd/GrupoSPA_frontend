@@ -50,7 +50,7 @@ function Perfil() {
                 <img src="images/perfil.jpeg" alt="Foto de perfil" />
             </div>
 
-            <div className='Datos de perfil'>
+            <div className='Datos-de-perfil'>
                 <h2>Nombre</h2>
                 <p>Nombre de usuario</p>
                 <h2>Edad</h2>
