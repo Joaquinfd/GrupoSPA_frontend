@@ -16,7 +16,7 @@
     width: 50%;
     height: 50%;
     border-radius: 50%;
-    border: 2px solid #080808;
+    border: 2px solid gray;
     box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
     transition: all 0.3s ease-in-out;
 }
@@ -115,4 +115,63 @@ div.division-oculta{
     margin-top: 70px;
     font-size: 12px;
     color: #ff5722;
+  }
+
+
+  .perfil-container h1{
+    color: #fff;
+  }
+  .Datos-de-perfil h2{
+
+    color: #fff;
+  }
+
+  .Datos-de-perfil p{
+
+    color: #fff;
+  }
+
+  .Dificultad h2{
+      
+      color: #fff;
+  }
+
+  .Dificultad h3{
+      
+      color: #fff;
+  }
+
+  .Dificultad h4{
+      
+      color: #fff;
+  }
+
+  .botones button{
+    margin-left: 10px;
+    margin-right: 10px;
+    background-color: #090a0a;
+    color: #fff;
+    border-color: #fff;
+
+  }
+
+  .botones button:hover{
+    
+    color: #ff5722;
+    border-color: #fff;
+  }
+
+  .division-oculta img{
+    margin-left: 100px;
+    margin-right: 0px;
+  }
+
+  .Hecho{
+    background-color: #090a0a;
+    color: #fff;
+  }
+  .Hecho:hover{
+    
+    color: red;
+    border-color: #fff;
   }
