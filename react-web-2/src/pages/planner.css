@@ -113,10 +113,14 @@
     z-index: auto !important;
 }
 
+.rbc-day-slot .rbc-event {
+    overflow: visible !important;
+}
 
-
-
-
+.event {
+    border: black 3px solid;
+    border-radius: 5px;
+}
 
 
 
