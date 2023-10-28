@@ -21,6 +21,8 @@ import agility from '../../public/images/running.png';
 import cardio from '../../public/images/heart.png';
 import flexibility from '../../public/images/yoga.png';
 
+import axios from 'axios';
+
 // Hecho con ayuda de ChatGPT
 function Images() {
     let [gender, setGender] = useState(null); // Inicialmente, no se selecciona ningún género
@@ -28,13 +30,16 @@ function Images() {
     let [attribute, setAttribute] = useState(null); // Atributos que se escogen (fuerza, velocidad, etc).
     let [allFieldsCompleted, setAllFieldsCompleted] = useState(false); //Para que cuand complete todo, recién ahí le aparezca el botón guardar
 
+    let [estadoFisico_api, setEstadoFisico] = useState(null); // Estado físico seleccionado, null al principio, para hacer get a api
+    let [objetivo_api, setObjetivo] = useState(null); // Objetivo seleccionado, null al principio, para hacer get a api
+
   
     let imagenes = {
-      male: {
+      masculino: {
         default: hombre, // Imagen por defecto de hombre
         states: [hombre1, hombre2, hombre3], // Opciones de estado físico para hombre
       },
-      female: {
+      femenino: {
         default: mujer, // Imagen por defecto de mujer
         states: [mujer1, mujer2, mujer3], // Opciones de estado físico para mujer
       },
@@ -59,26 +64,54 @@ function Images() {
 
     };
   
-    let handlePhysicalStateChange = (newState) => {
+    let handlePhysicalStateChange = (newState, nombre) => {
       setPhysicalState(newState);
+      setEstadoFisico(nombre);
     };
 
     let handleAttributeChange = (newAttribute) => {
         setAttribute(newAttribute);
       };
 
-    useEffect(() => {checkAllFieldsCompleted();}, [gender, physicalState, attribute]);
+    useEffect(() => {checkAllFieldsCompleted();}, [gender, physicalState, objetivo]);
+
+    let handleCreateRutina = async (event) => {
+
+      const bodyParameters = {
+          gender: gender,
+      };
+
+      console.log(bodyParameters);
+
+      axios.get('http://localhost:3000/rutinas', {
+        params: bodyParameters,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(response => {
+          console.log(response.data);
+      })
+      .catch(error => {
+          console.error('There was a problem with the request:', error);
+      });
+      
+      console.log(gender, estadoFisico_api, attribute);
+    };
+
+
+  
   
     return (
         <div className='body-container'>
         <div className='rutinas-container'>
         <h2>Selecciona un género:</h2>
         <div>
-          <Button onClick={() => handleGenderChange('male')}label={'Masculino'} 
-          isSelected={gender === 'male'}/>
+          <Button onClick={() => handleGenderChange('masculino')}label={'Masculino'} 
+          isSelected={gender === 'masculino'}/>
 
-          <Button onClick={() => handleGenderChange('female')}label={'Femenino'}
-          isSelected={gender === 'female'}/>
+          <Button onClick={() => handleGenderChange('femenino')}label={'Femenino'}
+          isSelected={gender === 'femenino'}/>
         </div>
   
         {gender && (//requerir haber clickeado algun género
@@ -91,7 +124,7 @@ function Images() {
           <div>
             <h2>Selecciona tu objetivo:</h2>
             {imagenes[gender].states.map((state, index) => (
-              <Button key={index} onClick={() => handlePhysicalStateChange(state)} label ={objetivo[index]}
+              <Button key={index} onClick={() => handlePhysicalStateChange(state, objetivo[index])} label ={objetivo[index]}
               isSelected={physicalState === state}/>
             ))}
           </div>
@@ -118,6 +151,8 @@ function Images() {
             <Button key={index} onClick={() => handleAttributeChange(attr)}
                 label = {attr}
                 isSelected={attribute === attr}
+                value={attr}
+                onChange={(e) => setObjetivo(e.target.value)}
                 />
             ))}
             <div>
@@ -134,10 +169,10 @@ function Images() {
         </div>)}
         
         </div>
-        {allFieldsCompleted && (<NavLink to="/mi-perfil" className="guardar-button-link"><button className="guardar-button">Guardar</button></NavLink>
+        {allFieldsCompleted && (<NavLink to="/mi-perfil" className="guardar-button-link"><button className="guardar-button" onClick={handleCreateRutina}>Guardar</button></NavLink>
 )}        </div>
 
     );
-  }
+            }
   
   export default Images;
