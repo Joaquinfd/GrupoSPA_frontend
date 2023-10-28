@@ -19,6 +19,8 @@ function Ingreso() {
     const [inputObjetivo, setInputObjetivo] = useState('');
     const [inputDificultad, setInputDificultad] = useState('');
 
+    const enlaceApiUsuarios = 'http://localhost:3001/usuarios';
+
 
 
     //ejemplo de patch
@@ -43,8 +45,7 @@ function Ingreso() {
     //   const dataToUpdate = {
     //     peso: 80,
     //   };
-      
-    // patchUsuario(userId, dataToUpdate);
+    
 
 
     const handleSignUpClick = () => {
@@ -65,7 +66,9 @@ function Ingreso() {
         // indicar el enlace necesario para eso.
         console.log('Iniciar Sesión:', inputEmail, inputPassword);
 
-        axios.get('http://localhost:3000/usuarios/list')
+        const enlace_get = `${enlaceApiUsuarios}/getemail/${inputEmail}`;
+
+        axios.get(enlace_get) // Modificar el enlace segun corresponda
         .then(response => {
             console.log(response.data);
         })
@@ -90,7 +93,7 @@ function Ingreso() {
         };
 
         try {
-            const response = await axios.post('http://localhost:3000/usuarios/create', bodyParameters);
+            const response = await axios.post('http://localhost:3001/usuarios/create', bodyParameters);
             console.log(response.data); 
             console.log('Usuario creado: ', bodyParameters);
         } catch (error) {
