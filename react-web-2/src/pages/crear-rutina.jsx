@@ -33,13 +33,16 @@ function Images() {
     let [estadoFisico_api, setEstadoFisico] = useState(null); // Estado físico seleccionado, null al principio, para hacer get a api
     let [objetivo_api, setObjetivo] = useState(null); // Objetivo seleccionado, null al principio, para hacer get a api
 
+    let [rutinasDisponibles, setRutinasDisponibles] = useState([]); // Rutinas disponibles para el usuario almacenadas
+    let [mostrarRutinas, setMostrarRutinas] = useState(false); // Para mostrar las rutinas disponibles
+
   
     let imagenes = {
-      masculino: {
+      Masculino: {
         default: hombre, // Imagen por defecto de hombre
         states: [hombre1, hombre2, hombre3], // Opciones de estado físico para hombre
       },
-      femenino: {
+      Femenino: {
         default: mujer, // Imagen por defecto de mujer
         states: [mujer1, mujer2, mujer3], // Opciones de estado físico para mujer
       },
@@ -78,39 +81,50 @@ function Images() {
     let handleCreateRutina = async (event) => {
 
       const bodyParameters = {
-          gender: gender,
+          genero: gender,
+          objetivo: estadoFisico_api,
+          atributo_fisico: attribute,
       };
 
-      console.log(bodyParameters);
+      console.log('bodyParameters:', bodyParameters);
 
-      axios.get('http://localhost:3000/rutinas', {
-        params: bodyParameters,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
+
+      const apiUrl = `http://localhost:3000/rutinas/${gender}/${estadoFisico_api}/${attribute}`;
+
+      // Realizar la solicitud GET con Axios
+      axios.get(apiUrl)
       .then(response => {
-          console.log(response.data);
+        console.log('Datos de rutinas:', response.data);
+        setRutinasDisponibles(response.data);
+
+        // Acceder a cada rutina individual dentro del array
+        response.data.forEach(rutina => {
+          // Acceder a cada propiedad de la rutina
+          const nombreRutina = rutina.nombre_rutina;
+          const genero = rutina.genero;
+          const objetivo = rutina.objetivo;
+          const atributoFisico = rutina.atributo_fisico;
+          const dificultad = rutina.dificultad_rutina;
+          const id = rutina.id;
+        });
+        setMostrarRutinas(true);
       })
       .catch(error => {
-          console.error('There was a problem with the request:', error);
+        console.error('Hubo un error:', error);
       });
-      
-      console.log(gender, estadoFisico_api, attribute);
     };
 
-
-  
+      
   
     return (
         <div className='body-container'>
         <div className='rutinas-container'>
         <h2>Selecciona un género:</h2>
         <div>
-          <Button onClick={() => handleGenderChange('masculino')}label={'Masculino'} 
+          <Button onClick={() => handleGenderChange('Masculino')}label={'Masculino'} 
           isSelected={gender === 'masculino'}/>
 
-          <Button onClick={() => handleGenderChange('femenino')}label={'Femenino'}
+          <Button onClick={() => handleGenderChange('Femenino')}label={'Femenino'}
           isSelected={gender === 'femenino'}/>
         </div>
   
@@ -169,8 +183,33 @@ function Images() {
         </div>)}
         
         </div>
-        {allFieldsCompleted && (<NavLink to="/mi-perfil" className="guardar-button-link"><button className="guardar-button" onClick={handleCreateRutina}>Guardar</button></NavLink>
-)}        </div>
+        {allFieldsCompleted && <button className="guardar-button" onClick={handleCreateRutina}>Guardar</button>}
+        
+
+        {mostrarRutinas && (
+          <div className='rutinas-container'>
+            <h2>Rutinas disponibles:</h2>
+            {rutinasDisponibles.map((rutina, index) => (
+              <div key={index} className='rutinas-disponibles-container'>
+              
+                <p>{`Nombre: ${rutina.nombre_rutina}`}</p>
+                <p>{`Descripción: ${rutina.descripcion}`}</p>
+                <p>{`Género: ${rutina.genero}`}</p>
+                <p>{`Objetivo: ${rutina.objetivo}`}</p>
+                <p>{`Atributo físico: ${rutina.atributo_fisico}`}</p>
+                <p>{`Dificultad: ${rutina.dificultad_rutina}`}</p>
+                <NavLink to={`/planner`}>Ver en planner</NavLink>
+                
+              </div>
+            ))}
+          </div>
+        )}
+
+    </div>
+
+        
+
+        
 
     );
             }
