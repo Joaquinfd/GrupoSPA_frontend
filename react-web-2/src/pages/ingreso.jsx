@@ -96,12 +96,19 @@ function Ingreso() {
             const response = await axios.post(`${enlaceApiUsuarios}/create/`, bodyParameters);
             console.log(response.data); 
             console.log('Usuario creado: ', bodyParameters);
+
+            const response_get_email = await axios.get(`${enlaceApiUsuarios}/get/${inputEmail}`);
+            
+            // toma el id del usuario creado recientemente y se lo da al post de planner como llave foranea
+            const response_planner = await axios.post(`http://localhost:3000/planner/create/`, {id_usuario: response_get_email.data.id});
         } catch (error) {
             console.error("Error en la solicitud:", error);
             if (error.response) {
                 console.error("Respuesta del servidor:", error.response.data);
             }
         }
+
+        
     };
 
     
