@@ -21,6 +21,8 @@ function Ingreso() {
 
     const enlaceApiUsuarios = 'http://localhost:3000/usuarios';
 
+    const [mostrarLinkPerfil, setMostrarLinkPerfil] = useState(false);
+
 
 
     //ejemplo de patch
@@ -71,6 +73,7 @@ function Ingreso() {
         axios.get(enlace_get) // Modificar el enlace segun corresponda
         .then(response => {
             console.log(response.data);
+            setMostrarLinkPerfil(true);
         })
         .catch(error => {
             console.error(error);
@@ -101,6 +104,8 @@ function Ingreso() {
             
             // toma el id del usuario creado recientemente y se lo da al post de planner como llave foranea
             const response_planner = await axios.post(`http://localhost:3000/planner/create/`, {id_usuario: response_get_email.data.id});
+
+            setMostrarLinkPerfil(true);
         } catch (error) {
             console.error("Error en la solicitud:", error);
             if (error.response) {
@@ -202,6 +207,7 @@ function Ingreso() {
                             <button type='button' onClick={handleSignUpClick} className='ingreso-boton-registro'>
                                 {showRegister ? '¿Ya tienes cuenta? Inicia sesión' : '¿No tienes cuenta? Regístrate'}
                             </button>
+                            {mostrarLinkPerfil && <Link to="/mi-perfil" className='link-mi-perfil'>Mi perfil</Link>}
                         </form>
                     </div>
                 </div>
