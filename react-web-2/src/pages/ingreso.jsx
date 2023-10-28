@@ -19,7 +19,7 @@ function Ingreso() {
     const [inputObjetivo, setInputObjetivo] = useState('');
     const [inputDificultad, setInputDificultad] = useState('');
 
-    const enlaceApiUsuarios = 'http://localhost:3001/usuarios';
+    const enlaceApiUsuarios = 'http://localhost:3000/usuarios';
 
 
 
@@ -93,7 +93,7 @@ function Ingreso() {
         };
 
         try {
-            const response = await axios.post('http://localhost:3001/usuarios/create', bodyParameters);
+            const response = await axios.post(`${enlaceApiUsuarios}/create/`, bodyParameters);
             console.log(response.data); 
             console.log('Usuario creado: ', bodyParameters);
         } catch (error) {
