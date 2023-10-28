@@ -19,7 +19,9 @@ function Ingreso() {
     const [inputObjetivo, setInputObjetivo] = useState('');
     const [inputDificultad, setInputDificultad] = useState('');
 
-    const enlaceApiUsuarios = 'http://localhost:3001/usuarios';
+    const enlaceApiUsuarios = 'http://localhost:3000/usuarios';
+
+    const [mostrarLinkPerfil, setMostrarLinkPerfil] = useState(false);
 
 
 
@@ -71,6 +73,7 @@ function Ingreso() {
         axios.get(enlace_get) // Modificar el enlace segun corresponda
         .then(response => {
             console.log(response.data);
+            setMostrarLinkPerfil(true);
         })
         .catch(error => {
             console.error(error);
@@ -93,15 +96,24 @@ function Ingreso() {
         };
 
         try {
-            const response = await axios.post('http://localhost:3001/usuarios/create', bodyParameters);
+            const response = await axios.post(`${enlaceApiUsuarios}/create/`, bodyParameters);
             console.log(response.data); 
             console.log('Usuario creado: ', bodyParameters);
+
+            const response_get_email = await axios.get(`${enlaceApiUsuarios}/get/${inputEmail}`);
+            
+            // toma el id del usuario creado recientemente y se lo da al post de planner como llave foranea
+            const response_planner = await axios.post(`http://localhost:3000/planner/create/`, {id_usuario: response_get_email.data.id});
+
+            setMostrarLinkPerfil(true);
         } catch (error) {
             console.error("Error en la solicitud:", error);
             if (error.response) {
                 console.error("Respuesta del servidor:", error.response.data);
             }
         }
+
+        
     };
 
     
@@ -195,6 +207,7 @@ function Ingreso() {
                             <button type='button' onClick={handleSignUpClick} className='ingreso-boton-registro'>
                                 {showRegister ? '¿Ya tienes cuenta? Inicia sesión' : '¿No tienes cuenta? Regístrate'}
                             </button>
+                            {mostrarLinkPerfil && <Link to="/mi-perfil" className='link-mi-perfil'>Mi perfil</Link>}
                         </form>
                     </div>
                 </div>
