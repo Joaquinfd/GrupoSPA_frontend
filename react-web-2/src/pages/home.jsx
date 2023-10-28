@@ -9,15 +9,15 @@ export default function Home() {
 
 
     
-    axios.get('http://localhost:3000/usuarios/list')
-    .then(response => {
-        // Procesar los datos recibidos desde el backend
-        console.log(response.data);
-    })
-    .catch(error => {
-        // Manejar errores de la solicitud
-        console.error(error);
-    });
+    // axios.get('http://localhost:3000/usuarios/list')
+    // .then(response => {
+    //     // Procesar los datos recibidos desde el backend
+    //     console.log(response.data);
+    // })
+    // .catch(error => {
+    //     // Manejar errores de la solicitud
+    //     console.error(error);
+    // });
 
     // axios.post('http://localhost:3000/characters/create', {
     //     name: 'Jesse',
