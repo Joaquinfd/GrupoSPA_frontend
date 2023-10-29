@@ -1,12 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './perfil.css'
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+
+
 function Perfil() {
     // Estado para controlar la visibilidad de las opciones
     const [mostrarOpciones, setMostrarOpciones] = useState(false);
-    const[mostrarDivision, setMostrarDivision] = useState(false);
+    const [mostrarDivision, setMostrarDivision] = useState(false);
     const [imagenSeleccionada, setImagenSeleccionada] = useState(null);
-    const[textoBoton, setTextoBoton] = useState('');
+    const [textoBoton, setTextoBoton] = useState('');
+
+    const [usuarios, setUsuarios] = useState([]); // Estado inicial vacío [
+
+
+
+    
+    let handleGetUSerbyId = async (event) => {
+      
+      // Lógica de inicio de sesión con get al servidor, se hace get general, debe hacer get al usuario
+      // indicar el enlace necesario para eso.
+      
+
+      const enlace_get = `http://localhost:3000/usuarios/1`;
+
+      axios.get(enlace_get) // Modificar el enlace segun corresponda
+      .then(response => {
+          console.log(response.data);
+          setUsuarios(response.data);
+          console.log(usuarios);
+      })
+      .catch(error => {
+          console.error(error);
+      });
+    };
+
+    useEffect(() => {
+      handleGetUSerbyId();
+    }, []);
+
 
     // Función para alternar la visibilidad de las opciones al hacer clic en el botón de ajustes
     const toggleOpciones = () => {
@@ -51,20 +83,18 @@ function Perfil() {
             </div>
 
             <div className='Datos-de-perfil'>
-                <h2>Nombre</h2>
-                <p>Nombre de usuario</p>
+                <h2>Nombre:</h2>
+                <p>{usuarios.nombre_usuario}</p>
                 <h2>Edad</h2>
-                <p>Edad de usuario</p>
+                <p>{usuarios.edad}</p>
                 <h2>Sexo</h2>
-                <p>Sexo de usuario</p>
+                <p>{usuarios.genero}</p>
                 <h2>Altura</h2>
                 <p>Altura de usuario</p>
                 <h2>Peso</h2>
-                <p>Peso de usuario</p>
+                <p>{usuarios.peso}</p>
                 <h2>Objetivo</h2>
-                <p>Objetivo de usuario</p>
-                <h2>Atributo de enfoque</h2>
-                <p>Atributo de enfoque de usuario</p>
+                <p>{usuarios.objetivo}</p>
             
             
             
