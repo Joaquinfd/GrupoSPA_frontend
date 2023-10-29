@@ -13,6 +13,10 @@ function Planner() {
 
     const [rutinasDisponibles, setRutinasDisponibles] = useState([]); // Rutinas disponibles para el usuario almacenadas
 
+    const [idPLanner, setIdPlanner] = useState(null); // Id del planner seleccionado para hacer get a api
+
+    const [plannerInfo, setPLannerInfo] = useState([]); // Información del planner seleccionado
+
 
     let handleRutina = async (event) => {
 
@@ -73,6 +77,29 @@ function Planner() {
     };
 
     useEffect (() => {generarEventosRutinas();}, [rutinasDisponibles]);
+
+
+    let getPlanner = async (event) => {
+
+  
+        setIdPlanner(1); // Id del planner seleccionado para hacer get a api, luego sera segun el usuario conectado
+        const apiUrl = `http://localhost:3000/planners/${idPLanner}`;
+  
+        // Realizar la solicitud GET con Axios
+        axios.get(apiUrl)
+        .then(response => {
+          setPLannerInfo(response.data);
+          console.log('planner:', plannerInfo)
+  
+          
+          
+        })
+        .catch(error => {
+          console.error('Hubo un error:', error);
+        });
+    };
+
+    useEffect (() => {getPlanner();}, []);
                 
     
 
