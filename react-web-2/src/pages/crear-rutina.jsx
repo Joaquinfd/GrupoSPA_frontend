@@ -41,6 +41,7 @@ function Images() {
     let [ejercicicosRutina, setEjerciciosRutina] = useState([]); // Ejercicios de la rutina seleccionada por el usuario
 
     let [mostrarEjercicios, setMostrarEjercicios] = useState(false); // Para mostrar los ejercicios de la rutina seleccionada por el usuario
+    let [msjBoton, setMsjBoton] = useState('Buscar'); // Para mostrar los ejercicios de la rutina seleccionada por el usuario
 
   
     let imagenes = {
@@ -70,16 +71,21 @@ function Images() {
       setGender(newGender);
       setPhysicalState(null); // Reiniciar el estado físico cuando se cambie el género
       setAttribute(null); // Reiniciar el atributo físico cuando se cambie el género
+      setMsjBoton('Buscar');
 
     };
   
     let handlePhysicalStateChange = (newState, nombre) => {
       setPhysicalState(newState);
       setEstadoFisico(nombre);
+      setMsjBoton('Buscar');
+
     };
 
     let handleAttributeChange = (newAttribute) => {
         setAttribute(newAttribute);
+        setMsjBoton('Buscar');
+
       };
 
     useEffect(() => {checkAllFieldsCompleted();}, [gender, physicalState, objetivo]);
@@ -102,6 +108,7 @@ function Images() {
       .then(response => {
         console.log('Datos de rutinas:', response.data);
         setRutinasDisponibles(response.data);
+        setMsjBoton('Ver ejercicios')
 
         // Acceder a cada rutina individual dentro del array
         response.data.forEach(rutina => {
@@ -213,7 +220,7 @@ function Images() {
         </div>)}
         
         </div>
-        {allFieldsCompleted && <button className="guardar-button" onClick={handleCreateRutina}>Guardar</button>}
+        {allFieldsCompleted && <button className="guardar-button" onClick={handleCreateRutina}>{msjBoton}</button>}
         
 
         {mostrarRutinas && (
