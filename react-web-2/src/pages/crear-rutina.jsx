@@ -35,6 +35,13 @@ function Images() {
 
     let [rutinasDisponibles, setRutinasDisponibles] = useState([]); // Rutinas disponibles para el usuario almacenadas
     let [mostrarRutinas, setMostrarRutinas] = useState(false); // Para mostrar las rutinas disponibles
+    let [RutinaEjercicios, setRutinaEjercicios] = useState([]); // Rutinas disponibles para el usuario almacenadas
+
+    let [id_rutina, setIdRutina] = useState(null); // Id de la rutina seleccionada para hacer get a api
+
+    const url_api = 'http://localhost:3000/rutinas';
+
+    let rutina_ejercicio = {}
 
   
     let imagenes = {
@@ -89,31 +96,43 @@ function Images() {
       console.log('bodyParameters:', bodyParameters);
 
 
-      const apiUrl = `http://localhost:3000/rutinas/${gender}/${estadoFisico_api}/${attribute}`;
+      const getRutinaUrl = `${url_api}/${gender}/${estadoFisico_api}/${attribute}`;
+
+      let getEjerciciosUrl = `${url_api}/${id_rutina}/ejercicios`;
+
+      let rutina_ejercicio = []
 
       // Realizar la solicitud GET con Axios
-      axios.get(apiUrl)
+      axios.get(getRutinaUrl)
       .then(response => {
         console.log('Datos de rutinas:', response.data);
         setRutinasDisponibles(response.data);
 
         // Acceder a cada rutina individual dentro del array
         response.data.forEach(rutina => {
-          // Acceder a cada propiedad de la rutina
-          const nombreRutina = rutina.nombre_rutina;
-          const genero = rutina.genero;
-          const objetivo = rutina.objetivo;
-          const atributoFisico = rutina.atributo_fisico;
-          const dificultad = rutina.dificultad_rutina;
-          const id = rutina.id;
+          setIdRutina(rutina.id);
+
+          axios.get(getEjerciciosUrl)
+          .then(response => {
+            console.log('Datos de ejercicios:', response.data);
+            setRutinaEjercicios(response.data);
+            rutina_ejercicio.push(response.data);
+            setMostrarRutinas(true);
+          })
+          .catch(error => {
+            console.error('Hubo un error:', error);
+          });
         });
-        setMostrarRutinas(true);
+        console.log('rutina_ejercicio:', rutina_ejercicio);
       })
       .catch(error => {
         console.error('Hubo un error:', error);
       });
+
+      
     };
 
+    
       
   
     return (
@@ -200,10 +219,19 @@ function Images() {
                 <p>{`Dificultad: ${rutina.dificultad_rutina}`}</p>
                 <NavLink to={`/planner`}>Ver en planner</NavLink>
                 
+                
               </div>
             ))}
+
+            
+
+
+
+          
           </div>
         )}
+
+        
 
     </div>
 
