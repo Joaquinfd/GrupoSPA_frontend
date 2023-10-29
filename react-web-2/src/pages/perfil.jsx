@@ -22,7 +22,7 @@ function Perfil() {
       // indicar el enlace necesario para eso.
       
 
-      const enlace_get = `http://localhost:3000/usuarios/1`;
+      const enlace_get = `http://localhost:3000/usuarios/2`;
 
       axios.get(enlace_get) // Modificar el enlace segun corresponda
       .then(response => {
@@ -69,7 +69,23 @@ function Perfil() {
     const ocultarDivision = () => {
       setMostrarDivision(false);
   };
-   
+
+
+    const deleteUsuario = async (event) => {
+
+      const enlace_delete = `http://localhost:3000/usuarios/2`;
+      axios.delete(enlace_delete) // Modificar el enlace segun corresponda
+      .then(response => {
+          console.log(response.data);
+          setUsuarios(response.data);
+          console.log(usuarios);
+      }
+      )
+      .catch(error => {
+          console.error(error);
+      }
+      );
+    }
   
     return (
         <>
@@ -89,8 +105,6 @@ function Perfil() {
                 <p>{usuarios.edad}</p>
                 <h2>Sexo</h2>
                 <p>{usuarios.genero}</p>
-                <h2>Altura</h2>
-                <p>Altura de usuario</p>
                 <h2>Peso</h2>
                 <p>{usuarios.peso}</p>
                 <h2>Objetivo</h2>
@@ -129,6 +143,7 @@ function Perfil() {
             <div><Link to='/notificaciones'>Notificaciones</Link></div>
             <div><Link to='/crear-rutina'>Modificar Objetivos</Link></div>
             <div><a href="#división-oculta" onClick={() => { mostrarOcultarDivision(); scrollToDivision(); }}>Ajustar Dificultad</a></div>
+            <div><a href="#división-oculta" onClick={() => { deleteUsuario() }}>Eliminar cuenta</a></div>
             </div>
           )}
         </div>
