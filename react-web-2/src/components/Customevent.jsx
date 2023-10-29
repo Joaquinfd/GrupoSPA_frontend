@@ -15,12 +15,12 @@ function CustomEvent({ event }) {
         <div>
           {/* Detalles del evento */}
           <p>Fecha: {event.start.toLocaleString()}</p>
-          <p>Ejercicios:</p>
+          <p>Descripcion:</p>
           <ul>
-            {event.ejercicios.map((exercise, index) => (
-              <li key={index}>{exercise}</li>
-            ))}
-          </ul>
+          {Array.isArray(event.descripcion) && event.descripcion.map((description, index) => (
+            <li key={index}>{description}</li>
+          ))}
+        </ul>
         </div>
       )}
     </div>
