@@ -119,7 +119,8 @@ function Images() {
       .then(response => {
         console.log('Datos de rutinas:', response.data);
         setRutinasDisponibles(response.data);
-        setMsjBoton('Ver ejercicios')
+        setMsjBoton('Ver ejercicios');
+        setMostrarRutinas(true);
 
         // Acceder a cada rutina individual dentro del array
         response.data.forEach(rutina => {
