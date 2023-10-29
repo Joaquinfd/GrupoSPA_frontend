@@ -36,6 +36,12 @@ function Images() {
     let [rutinasDisponibles, setRutinasDisponibles] = useState([]); // Rutinas disponibles para el usuario almacenadas
     let [mostrarRutinas, setMostrarRutinas] = useState(false); // Para mostrar las rutinas disponibles
 
+    let [rutinaId, setRutinaId] = useState(null); // Id de la rutina seleccionada por el usuario
+
+    let [ejercicicosRutina, setEjerciciosRutina] = useState([]); // Ejercicios de la rutina seleccionada por el usuario
+
+    let [mostrarEjercicios, setMostrarEjercicios] = useState(false); // Para mostrar los ejercicios de la rutina seleccionada por el usuario
+
   
     let imagenes = {
       Masculino: {
@@ -106,12 +112,36 @@ function Images() {
           const atributoFisico = rutina.atributo_fisico;
           const dificultad = rutina.dificultad_rutina;
           const id = rutina.id;
+          setRutinaId(id);
+          axios.get(`http://localhost:3000/rutinas/${id}/ejercicios`)
+          .then(response => {
+            console.log('Datos de ejercicios:', response.data);
+            const ejercicios = response.data.ejercicios;
+            console.log('ejercicios:', ejercicios[0].nombre_ejercicio) // Acceder al nombre del primer ejercicio
+            const rutinaCompleta = {
+              nombreRutina,
+              genero,
+              objetivo,
+              atributoFisico,
+              dificultad,
+              ejercicios,
+            };
+            console.log('rutinaCompleta:', ejercicios);
+            setEjerciciosRutina(ejercicios);
+            console.log('ejercicicosRutina:', ejercicicosRutina)
+            if (ejercicicosRutina.length > 0) {
+              setMostrarEjercicios(true);
+              console.log('mostrarEjercicios:', mostrarEjercicios)
+            }
+
+          })
         });
         setMostrarRutinas(true);
       })
       .catch(error => {
         console.error('Hubo un error:', error);
       });
+
     };
 
       
@@ -198,7 +228,25 @@ function Images() {
                 <p>{`Objetivo: ${rutina.objetivo}`}</p>
                 <p>{`Atributo físico: ${rutina.atributo_fisico}`}</p>
                 <p>{`Dificultad: ${rutina.dificultad_rutina}`}</p>
-                <NavLink to={`/planner`}>Ver en planner</NavLink>
+                <NavLink to={`/planner`} className={'boton-a-planner'}>Ver en planner</NavLink>
+                
+              </div>
+            ))}
+          </div>
+        )}
+
+
+        
+        {mostrarRutinas && mostrarEjercicios && (
+          <div className='rutinas-container'>
+            <h2>Ejericios:</h2>
+            {ejercicicosRutina.map((rutina, index) => (
+              <div key={index} className='rutinas-disponibles-container'>
+              
+                <p>{`${rutina.nombre_ejercicio} | Dificultad: ${rutina.dificultad} | Grupo(s) muscular(es): ${rutina.grupo_muscular}`}</p>
+                
+                
+                
                 
               </div>
             ))}
