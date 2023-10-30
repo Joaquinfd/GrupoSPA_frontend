@@ -3,12 +3,28 @@ import './home.css'
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
-
+import axios from 'axios';  
 
 export default function Home() {
 
-    // const images = ["images/home-image-1.jpg", 
-    // "images/home-image-2.jpg", "images/home-image-3.jpg"];
+
+    
+    // axios.get('http://localhost:3000/usuarios/list')
+    // .then(response => {
+    //     // Procesar los datos recibidos desde el backend
+    //     console.log(response.data);
+    // })
+    // .catch(error => {
+    //     // Manejar errores de la solicitud
+    //     console.error(error);
+    // });
+
+    // axios.post('http://localhost:3000/characters/create', {
+    //     name: 'Jesse',
+    //     description: 'Mechanic',
+    //     image: 'https://vignette.wikia.nocookie.net/breakingbad/images/0/0e/JesseS5.jpg/revision/latest?cb=20120620014053'
+    // })
+
 
     const images = [
         {

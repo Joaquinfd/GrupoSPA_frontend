@@ -57,7 +57,7 @@
     margin-bottom: 0px;
 }
 
-.ingreso-edad, .ingreso-peso, .ingreso-sexo {
+.ingreso-edad, .ingreso-peso, .ingreso-sexo, .ingreso-nombre {
     height: 30px;
     border-radius: 5px;
 }
@@ -78,5 +78,9 @@
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Sombra ligera al pasar por encima */
         transform: translateY(-5px);
       }
+}
+
+.link-mi-perfil {
+    margin-top: 20px;
 }
 
