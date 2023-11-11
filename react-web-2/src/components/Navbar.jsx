@@ -8,7 +8,7 @@ function Navbar() {
     <header>
       <nav className="navbar">
         <div className="logo"> 
-        <NavLink exact to="/" activeClassName="active">
+        <NavLink exact="true" to="/" activeclassname="active">
         <img src={logo} alt="Logo" className="logo" />
         </NavLink>
         </div>
@@ -16,24 +16,24 @@ function Navbar() {
         <li className="dropdown">
             <span className="dropbtn">Mi perfil</span>
             <div className="dropdown-content">
-              <NavLink to="/mi-perfil" activeClassName="active">
+              <NavLink to="/mi-perfil" activeclassname="active">
                 Mi Perfil
               </NavLink>
-              <NavLink to="/planner" activeClassName="active">
+              <NavLink to="/planner" activeclassname="active">
                 Mi planner
               </NavLink>
-              <NavLink to="/crear-rutina" activeClassName="active">
+              <NavLink to="/crear-rutina" activeclassname="active">
                 Crear Rutina
               </NavLink>
             </div>
           </li>          
           <li>
-            <NavLink to="/instrucciones" activeClassName="active">
+            <NavLink to="/instrucciones" activeclassname="active">
               Instrucciones
             </NavLink>
           </li>
           <li>
-          <NavLink exact to="/ingreso" activeClassName="active">
+          <NavLink exact="true" to="/ingreso" activeclassname="active">
             Ingresar
           </NavLink>
         </li>

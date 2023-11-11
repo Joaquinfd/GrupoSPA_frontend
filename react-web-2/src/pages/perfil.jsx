@@ -22,7 +22,7 @@ function Perfil() {
       // indicar el enlace necesario para eso.
       
 
-      const enlace_get = `http://localhost:3000/usuarios/2`;
+      const enlace_get = `${import.meta.env.VITE_BACKEND_URL}/usuarios/2`;
 
       axios.get(enlace_get) // Modificar el enlace segun corresponda
       .then(response => {
@@ -73,7 +73,7 @@ function Perfil() {
 
     const deleteUsuario = async (event) => {
 
-      const enlace_delete = `http://localhost:3000/usuarios/2`;
+      const enlace_delete = `${import.meta.env.VITE_BACKEND_URL}/usuarios/2`;
       axios.delete(enlace_delete) // Modificar el enlace segun corresponda
       .then(response => {
           console.log(response.data);

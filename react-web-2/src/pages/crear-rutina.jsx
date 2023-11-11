@@ -39,8 +39,6 @@ function Images() {
 
     let [id_rutina, setIdRutina] = useState(null); // Id de la rutina seleccionada para hacer get a api
 
-    const url_api = 'http://localhost:3000/rutinas';
-
     let rutina_ejercicio = {}
 
     let [rutinaId, setRutinaId] = useState(null); // Id de la rutina seleccionada por el usuario
@@ -108,9 +106,9 @@ function Images() {
       console.log('bodyParameters:', bodyParameters);
 
 
-      const getRutinaUrl = `${url_api}/${gender}/${estadoFisico_api}/${attribute}`;
+      const getRutinaUrl = `${import.meta.env.VITE_BACKEND_URL}/${gender}/${estadoFisico_api}/${attribute}`;
 
-      let getEjerciciosUrl = `${url_api}/${id_rutina}/ejercicios`;
+      let getEjerciciosUrl = `${import.meta.env.VITE_BACKEND_URL}/${id_rutina}/ejercicios`;
 
       let rutina_ejercicio = []
 
@@ -133,7 +131,7 @@ function Images() {
           const dificultad = rutina.dificultad_rutina;
           const id = rutina.id;
           setRutinaId(id);
-          axios.get(`http://localhost:3000/rutinas/${id}/ejercicios`)
+          axios.get(`${import.meta.env.VITE_BACKEND_URL}/rutinas/${id}/ejercicios`)
           .then(response => {
             console.log('Datos de ejercicios:', response.data);
             const ejercicios = response.data.ejercicios;

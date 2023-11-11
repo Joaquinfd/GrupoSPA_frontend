@@ -20,8 +20,6 @@ function Ingreso() {
     const [inputObjetivo, setInputObjetivo] = useState('');
     const [inputDificultad, setInputDificultad] = useState('');
 
-    const enlaceApiUsuarios = 'http://localhost:3000/usuarios';
-
 
     const [mostrarLinkPerfil, setMostrarLinkPerfil] = useState(false);
 
@@ -67,20 +65,26 @@ function Ingreso() {
 
     const handleLoginSubmit = async (event) => {
         event.preventDefault();
-        // Lógica de inicio de sesión con get al servidor, se hace get general, debe hacer get al usuario
-        // indicar el enlace necesario para eso.
         console.log('Iniciar Sesión:', inputEmail, inputPassword);
 
-        const enlace_get = `${enlaceApiUsuarios}/getemail/${inputEmail}`;
-
-        axios.get(enlace_get) // Modificar el enlace segun corresponda
-        .then(response => {
-            console.log(response.data);
+        const loginData = {
+            mail: inputEmail,
+            contraseña: inputPassword
+          };
+        try {
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/usuarios/login`, loginData);
             setMostrarLinkPerfil(true);
-        })
-        .catch(error => {
-            console.error(error);
-        });
+        }
+        catch(error){
+            console.error('Error en el inicio de sesión:', error);
+            if (error.response) {
+                if (error.response.status === 400) {
+                  alert('Credenciales incorrectas. Por favor, inténtalo de nuevo.');
+                } else {
+                  console.error('Error en el servidor:', error.response.data);
+                }
+            }
+        }
     };
 
     const handleRegisterSubmit = async (event) => {
@@ -99,14 +103,14 @@ function Ingreso() {
         };
 
         try {
-            const response = await axios.post(`${enlaceApiUsuarios}/create/`, bodyParameters);
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/usuarios/create/`, bodyParameters);
             console.log(response.data); 
             console.log('Usuario creado: ', bodyParameters);
 
-            const response_get_email = await axios.get(`${enlaceApiUsuarios}/get/${inputEmail}`);
+            const response_get_email = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/usuarios/get/${inputEmail}`);
             
             // toma el id del usuario creado recientemente y se lo da al post de planner como llave foranea
-            const response_planner = await axios.post(`http://localhost:3000/planner/create/`, {id_usuario: response_get_email.data.id});
+            const response_planner = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/planner/create/`, {id_usuario: response_get_email.data.id});
 
             setMostrarLinkPerfil(true);
         } catch (error) {
@@ -118,18 +122,15 @@ function Ingreso() {
 
         
     };
-
-    
+  
 
     return (
-
-
         <div className='ingreso-main-container'>
                     <div className='ingreso-form-container'>
                         <h1>{showRegister ? 'Regístrate' : 'Inicia sesión'}</h1>
                         <form onSubmit={showRegister ? handleRegisterSubmit : handleLoginSubmit} className='ingreso-form'>
                             <div className='form-element'>
-                                <label htmlFor="username">Usuario:</label>
+                                <label htmlFor="username">Mail:</label>
                                 <input 
                                     type="text" 
                                     placeholder='tumail@plannerSPA.com' 

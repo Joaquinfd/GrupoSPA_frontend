@@ -31,7 +31,7 @@ function Planner() {
         const attribute = bodyParameters.atributo_fisico;
   
   
-        const apiUrl = `http://localhost:3000/rutinas/${gender}/${objetivo}/${attribute}`;
+        const apiUrl = `${import.meta.env.VITE_BACKEND_URL}/rutinas/${gender}/${objetivo}/${attribute}`;
   
         // Realizar la solicitud GET con Axios
         axios.get(apiUrl)
@@ -83,7 +83,7 @@ function Planner() {
 
   
         setIdPlanner(1); // Id del planner seleccionado para hacer get a api, luego sera segun el usuario conectado
-        const apiUrl = `http://localhost:3000/planners/${idPLanner}`;
+        const apiUrl = `${import.meta.env.VITE_BACKEND_URL}/planners/${idPLanner}`;
   
         // Realizar la solicitud GET con Axios
         axios.get(apiUrl)
