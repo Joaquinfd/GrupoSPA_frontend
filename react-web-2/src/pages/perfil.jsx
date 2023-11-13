@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './perfil.css'
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { AuthContext } from '../auth/authContext';
 
 
 function Perfil() {
@@ -10,35 +11,43 @@ function Perfil() {
     const [mostrarDivision, setMostrarDivision] = useState(false);
     const [imagenSeleccionada, setImagenSeleccionada] = useState(null);
     const [textoBoton, setTextoBoton] = useState('');
-
-    const [usuarios, setUsuarios] = useState([]); // Estado inicial vacío [
-
-
-
+    const [usuarios, setUsuarios] = useState({}); // Estado inicial vacío
     
-    let handleGetUSerbyId = async (event) => {
-      
-      // Lógica de inicio de sesión con get al servidor, se hace get general, debe hacer get al usuario
-      // indicar el enlace necesario para eso.
-      
+    const {token, setToken} = useContext(AuthContext);
+    const [IdUsuario, setIdUsuario] = useState(null);
+    const [UsuarioActual, setUsuarioActual] = useState(null);
 
-      const enlace_get = `${import.meta.env.VITE_BACKEND_URL}/usuarios/2`;
-
-      axios.get(enlace_get) // Modificar el enlace segun corresponda
-      .then(response => {
-          console.log(response.data);
-          setUsuarios(response.data);
-          console.log(usuarios);
-      })
-      .catch(error => {
-          console.error(error);
-      });
-    };
 
     useEffect(() => {
-      handleGetUSerbyId();
-    }, []);
-
+      const getUserId = async () => {
+        try {
+          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/usuarios/currentUsuario/token`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+          setIdUsuario(response.data.idUsuario);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+  
+      const getUser = async () => {
+        try {
+          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/usuarios/${IdUsuario}`);
+          setUsuarioActual(response.data);
+        
+        } catch (error) {
+          alert(error);
+        }
+      };
+  
+      if (IdUsuario) {
+        getUser();
+      } else {
+        getUserId();
+      }
+    }, [IdUsuario]);
 
     // Función para alternar la visibilidad de las opciones al hacer clic en el botón de ajustes
     const toggleOpciones = () => {
@@ -73,7 +82,7 @@ function Perfil() {
 
     const deleteUsuario = async (event) => {
 
-      const enlace_delete = `${import.meta.env.VITE_BACKEND_URL}/usuarios/2`;
+      const enlace_delete = `${import.meta.env.VITE_BACKEND_URL}/usuarios/14`;
       axios.delete(enlace_delete) // Modificar el enlace segun corresponda
       .then(response => {
           console.log(response.data);
@@ -86,33 +95,37 @@ function Perfil() {
       }
       );
     }
-  
     return (
         <>
-
         <div className='perfil-container'>
-
-            
             <div className='Foto-de-perfil'>
             <h1>Mi Perfil</h1>
                 <img src="images/perfil.jpeg" alt="Foto de perfil" />
             </div>
 
-            <div className='Datos-de-perfil'>
-                <h2>Nombre:</h2>
-                <p>{usuarios.nombre_usuario}</p>
-                <h2>Edad</h2>
-                <p>{usuarios.edad}</p>
-                <h2>Sexo</h2>
-                <p>{usuarios.genero}</p>
-                <h2>Peso</h2>
-                <p>{usuarios.peso}</p>
-                <h2>Objetivo</h2>
-                <p>{usuarios.objetivo}</p>
-            
-            
-            
-            </div>
+            {UsuarioActual ? (
+          <div className='Datos-de-perfil'>
+            <h2>Nombre:</h2>
+            <p>{UsuarioActual.nombre_usuario}</p>
+            <h2>Edad</h2>
+            <p>{UsuarioActual.edad}</p>
+            <h2>Sexo</h2>
+            <p>{UsuarioActual.genero}</p>
+            <h2>Peso</h2>
+            <p>{UsuarioActual.peso}</p>
+            <h2>Objetivo</h2>
+            <p>{UsuarioActual.objetivo}</p>
+          </div>
+        ) : (
+          <div className='Datos-de-perfil'>
+          <h2>Nombre</h2>
+          <h2>Edad</h2>
+          <h2>Sexo</h2>
+          <h2>Peso</h2>
+          <h2>Objetivo</h2>
+          </div>
+        )}
+
         <div className='Dificultad' id ='división-oculta'>
         {mostrarDivision && (
           <div className="division-oculta">
@@ -121,19 +134,12 @@ function Perfil() {
             ><button onClick={() => handleBotonClick('../../public/images/facil.png', 'Fácil')}> Fácil</button>
               <button onClick={() => handleBotonClick('../../public/images/intermedio.png', 'Intermedio')}> Intermedio</button>
               <button onClick={() => handleBotonClick('../../public/images/dificil.png', 'Difícil')}> Díficil</button></div>
-            
             <h3>Dificultad seleccionada</h3>
             <h4>{textoBoton}</h4>
             {imagenSeleccionada && <img src={imagenSeleccionada} alt="Imagen seleccionada" style={{width: '150px', height: '150px'}} />}
-
             <button className='Hecho' onClick={ocultarDivision}> Hecho</button>
-
+        </div>)}
         </div>
-)}
-
-        </div>
-
-
         <div className='boton-ajustes-container'>
           <button className='boton-ajustes' onClick={toggleOpciones}>
             Ajustes
@@ -147,17 +153,14 @@ function Perfil() {
             </div>
           )}
         </div>
-
-
-            
         </div>
 
 
-       <div className='Disclaimer'>
+       {/*<div className='Disclaimer'>
        <p>- Solo si esta ingresado se podra ver. Tendrá la configuración elegida en el inicio por la persona, y tendrá la opción de editar los planes.</p>
 
       <p>- Se podrá ajustar acá el uso de notificaciones.</p>
-           </div>
+          </div>*/}
         </>
     );  
 }

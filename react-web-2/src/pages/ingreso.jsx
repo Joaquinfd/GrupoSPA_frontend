@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import './ingreso.css';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Link, useNavigate  } from 'react-router-dom';
 import axios from 'axios';
-
+import { AuthContext } from '../auth/authContext';
 
 
 function Ingreso() {
+    const {token, setToken} = useContext(AuthContext)
+    const navigate = useNavigate();
 
-    
     const [showRegister, setShowRegister] = useState(false);
 
     const [inputEmail, setInputEmail] = useState(''); 
@@ -19,38 +20,6 @@ function Ingreso() {
 
     const [inputObjetivo, setInputObjetivo] = useState('');
     const [inputDificultad, setInputDificultad] = useState('');
-
-
-    const [mostrarLinkPerfil, setMostrarLinkPerfil] = useState(false);
-
-
-
-
-    //ejemplo de patch
-
-    // const patchUsuario = async (userId, dataToUpdate) => {
-    //     const url = `http://localhost:3000/usuarios/update/${userId}`;
-      
-    //     try {
-    //       const response = await axios.patch(url, dataToUpdate);
-    //       // En Axios, simplemente pasas la URL y los datos a enviar para la solicitud PATCH
-      
-    //       console.log('Usuario actualizado:', response.data);
-    //       // Aquí podrías manejar la respuesta como necesites
-    //     } catch (error) {
-    //       console.error('Hubo un problema al intentar actualizar el usuario:', error);
-    //       // Aquí podrías manejar el error de manera adecuada en tu aplicación
-    //     }
-    //   };
-      
-    //   // Llamada a la función para actualizar un usuario específico
-    //   const userId = 1; // ID del usuario que quieres actualizar
-    //   const dataToUpdate = {
-    //     peso: 80,
-    //   };
-    
-
-
     const handleSignUpClick = () => {
         setShowRegister(!showRegister);
         setInputEmail('');
@@ -72,8 +41,15 @@ function Ingreso() {
             contraseña: inputPassword
           };
         try {
-            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/usuarios/login`, loginData);
-            setMostrarLinkPerfil(true);
+            const respuesta = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/usuarios/login`, loginData);
+
+
+            // Se guarda el token en localStorage
+            const access_token = respuesta.data.access_token;
+            setToken(access_token); 
+            console.log(access_token);
+            navigate('/mi-perfil');
+            
         }
         catch(error){
             console.error('Error en el inicio de sesión:', error);
@@ -103,14 +79,14 @@ function Ingreso() {
         };
 
         try {
-            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/usuarios/create/`, bodyParameters);
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/usuarios/signup`, bodyParameters);
             console.log(response.data); 
             console.log('Usuario creado: ', bodyParameters);
 
-            const response_get_email = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/usuarios/get/${inputEmail}`);
+            const response_get_email = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/usuarios/get${inputEmail}`);
             
             // toma el id del usuario creado recientemente y se lo da al post de planner como llave foranea
-            const response_planner = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/planner/create/`, {id_usuario: response_get_email.data.id});
+            const response_planner = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/planner/create`, {id_usuario: response_get_email.data.id});
 
             setMostrarLinkPerfil(true);
         } catch (error) {
@@ -137,6 +113,7 @@ function Ingreso() {
                                     className='ingreso-username'
                                     value={inputEmail}
                                     onChange={(e) => setInputEmail(e.target.value)}
+                                    autoComplete="username"
                                     required
                                 />
                             </div>
@@ -146,6 +123,7 @@ function Ingreso() {
                                     type="password" 
                                     placeholder='contraseña'
                                     className='ingreso-password'
+                                    autoComplete="current-password"
                                     value={inputPassword}
                                     onChange={(e) => setInputPassword(e.target.value)}
                                     required
@@ -211,7 +189,6 @@ function Ingreso() {
                             <button type='button' onClick={handleSignUpClick} className='ingreso-boton-registro'>
                                 {showRegister ? '¿Ya tienes cuenta? Inicia sesión' : '¿No tienes cuenta? Regístrate'}
                             </button>
-                            {mostrarLinkPerfil && <Link to="/mi-perfil" className='link-mi-perfil'>Mi perfil</Link>}
                         </form>
                     </div>
                 </div>
