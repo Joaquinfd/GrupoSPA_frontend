@@ -21,11 +21,13 @@ function Perfil() {
     useEffect(() => {
       const getUserId = async () => {
         try {
-          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/usuarios/currentUsuario/token`, {
+          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/auth/currentUsuario/token`, {
             headers: {
               Authorization: `Bearer ${token}`
             }
           });
+          console.log("entro!");
+          console.log(response.data.idUsuario);
           setIdUsuario(response.data.idUsuario);
         } catch (error) {
           console.log(error);
@@ -34,9 +36,17 @@ function Perfil() {
   
       const getUser = async () => {
         try {
-          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/usuarios/${IdUsuario}`);
+          console.log("aaaaa");
+          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/usuarios/${IdUsuario}`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+            });
+          console.log("bbbbb");
           setUsuarioActual(response.data);
-        
+          
+
+          console.log(response.data);
         } catch (error) {
           alert(error);
         }
