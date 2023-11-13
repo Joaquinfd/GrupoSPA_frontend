@@ -57,7 +57,7 @@
     margin-bottom: 0px;
 }
 
-.ingreso-edad, .ingreso-peso, .ingreso-sexo, .ingreso-nombre {
+.ingreso-edad, .ingreso-peso, .ingreso-sexo, .ingreso-nombre, .ingreso-objetivo {
     height: 30px;
     border-radius: 5px;
 }
