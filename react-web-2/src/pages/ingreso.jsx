@@ -65,9 +65,7 @@ function Ingreso() {
 
     const handleRegisterSubmit = async (event) => {
         event.preventDefault();
-        // Lógica de registro con post al servidor
-        console.log('Registrarse:', inputEmail, inputPassword, inputName, inputAge, inputWeight, inputGender);
-
+        console.log('Registrarse:', inputEmail, inputPassword, inputName, inputAge, inputWeight, inputGender, inputObjetivo);
         const bodyParameters = {
             nombre_usuario: inputName,
             objetivo: inputObjetivo,
@@ -82,24 +80,28 @@ function Ingreso() {
             const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/usuarios/signup`, bodyParameters);
             console.log(response.data); 
             console.log('Usuario creado: ', bodyParameters);
-
-            const response_get_email = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/usuarios/get${inputEmail}`);
+            const access_token = response.data.access_token;
+            setToken(access_token);
             
-            // toma el id del usuario creado recientemente y se lo da al post de planner como llave foranea
-            const response_planner = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/planner/create`, {id_usuario: response_get_email.data.id});
-
-            setMostrarLinkPerfil(true);
+            await handleLoginSubmit(event);
+            alert('¡Registro exitoso!');
         } catch (error) {
             console.error("Error en la solicitud:", error);
             if (error.response) {
+                if (error.response.data.errors && Array.isArray(error.response.data.errors)) {
+                    const validationErrors = error.response.data.errors.map((err) => err.message);
+                    alert(validationErrors.join('\n'));
+                } else {
+                    alert('Error en el servidor. Por favor, inténtalo de nuevo.');
+                }
+            } else {
+                alert('Error en la solicitud. Por favor, inténtalo de nuevo.');
                 console.error("Respuesta del servidor:", error.response.data);
             }
         }
 
-        
     };
   
-
     return (
         <div className='ingreso-main-container'>
                     <div className='ingreso-form-container'>
@@ -182,6 +184,22 @@ function Ingreso() {
                                         <option value="femenino">Femenino</option>
                                     </select>
                                 </div>
+                            )}
+                            {showRegister && (
+                            <div className='form-element'>
+                                <label htmlFor="objetivo">Objetivo:</label>
+                                <select 
+                                id="objetivo" 
+                                name="objetivo" 
+                                className='ingreso-objetivo'
+                                value={inputObjetivo}
+                                onChange={(e) => setInputObjetivo(e.target.value)}
+                                >
+                                <option value="bajar_peso">Bajar de peso</option>
+                                <option value="ganar_masa_muscular">Ganancia de Masa Muscular</option>
+                                <option value="definicion">Definición</option>
+                                </select>
+                            </div>
                             )}
                             <button type='submit' className='ingreso-submit-form'>
                                 {showRegister ? 'Registrarse' : 'Entrar'}

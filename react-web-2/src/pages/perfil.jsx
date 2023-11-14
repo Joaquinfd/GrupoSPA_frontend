@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import './perfil.css'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../auth/authContext';
 
@@ -12,8 +12,9 @@ function Perfil() {
     const [imagenSeleccionada, setImagenSeleccionada] = useState(null);
     const [textoBoton, setTextoBoton] = useState('');
     const [usuarios, setUsuarios] = useState({}); // Estado inicial vacío
+    const navigate = useNavigate();
     
-    const {token, setToken} = useContext(AuthContext);
+    const {token, logout} = useContext(AuthContext);
     const [IdUsuario, setIdUsuario] = useState(null);
     const [UsuarioActual, setUsuarioActual] = useState(null);
 
@@ -21,14 +22,14 @@ function Perfil() {
     useEffect(() => {
       const getUserId = async () => {
         try {
+          if (token){
           const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/auth/currentUsuario/token`, {
             headers: {
               Authorization: `Bearer ${token}`
             }
           });
-          console.log("entro!");
-          console.log(response.data.idUsuario);
           setIdUsuario(response.data.idUsuario);
+        }
         } catch (error) {
           console.log(error);
         }
@@ -36,13 +37,11 @@ function Perfil() {
   
       const getUser = async () => {
         try {
-          console.log("aaaaa");
           const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/usuarios/${IdUsuario}`, {
             headers: {
               Authorization: `Bearer ${token}`
             }
             });
-          console.log("bbbbb");
           setUsuarioActual(response.data);
           
 
@@ -62,8 +61,6 @@ function Perfil() {
     // Función para alternar la visibilidad de las opciones al hacer clic en el botón de ajustes
     const toggleOpciones = () => {
       setMostrarOpciones(!mostrarOpciones);
-      
-    
     };
 
     const mostrarOcultarDivision = () => {
@@ -89,21 +86,19 @@ function Perfil() {
       setMostrarDivision(false);
   };
 
-
-    const deleteUsuario = async (event) => {
-
-      const enlace_delete = `${import.meta.env.VITE_BACKEND_URL}/usuarios/14`;
-      axios.delete(enlace_delete) // Modificar el enlace segun corresponda
-      .then(response => {
-          console.log(response.data);
-          setUsuarios(response.data);
-          console.log(usuarios);
+    const deleteUsuario = async () => {
+      try {
+          const usuario_eliminado = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/usuarios/${IdUsuario}`, {
+            headers: {
+            Authorization: `Bearer ${token}`
+            }
+        });
+        logout();
+        navigate('/')
+      } catch (error) {
+        console.log(error);
       }
-      )
-      .catch(error => {
-          console.error(error);
-      }
-      );
+
     }
     return (
         <>

@@ -1,9 +1,17 @@
-import React from 'react';
+import {React, useContext} from 'react';
 import { NavLink } from 'react-router-dom';
 import './Navbar.css';
 import logo from '../../public/images/logo_inicio.png';
+import { AuthContext } from '../auth/authContext';
+
 
 function Navbar() {
+  const { token, logout } = useContext(AuthContext);
+
+  const handleLogout = () => {
+    logout() ;
+  };
+
   return (
     <header>
       <nav className="navbar">
@@ -33,10 +41,17 @@ function Navbar() {
             </NavLink>
           </li>
           <li>
-          <NavLink exact="true" to="/ingreso" activeclassname="active">
-            Ingresar
-          </NavLink>
-        </li>
+            {/* Cambiar entre "Ingresar" y "Cerrar sesión" */}
+            {token ? (
+              <NavLink to="/" activeclassname="active" onClick={handleLogout}>
+                Cerrar Sesión
+              </NavLink>
+            ) : (
+              <NavLink exact="true" to="/ingreso" activeclassname="active">
+                Ingresar
+              </NavLink>
+            )}
+          </li>
         </ul>
       </nav>
     </header>
