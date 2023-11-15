@@ -10,11 +10,8 @@ import axios from 'axios';
 function Planner() {
 
     const localizer = momentLocalizer(moment);
-
     const [rutinasDisponibles, setRutinasDisponibles] = useState([]); // Rutinas disponibles para el usuario almacenadas
-
     const [idPLanner, setIdPlanner] = useState(null); // Id del planner seleccionado para hacer get a api
-
     const [plannerInfo, setPLannerInfo] = useState([]); // Información del planner seleccionado
 
 
@@ -101,30 +98,6 @@ function Planner() {
 
     useEffect (() => {getPlanner();}, []);
                 
-    
-
-
-
-    const eventos = [
-        {
-            title: 'Rutina push',
-            start: new Date(2023, 8, 12, 10, 0), // Año, mes (0-11), día, hora, minuto
-            end: new Date(2023, 8, 12, 12, 0),
-            ejercicios: ['Press de banca', 'Press militar', 'Extension de triceps', 'Fondos en paralelas']
-        },
-        {
-            title: 'Rutina pull',
-            start: new Date(2023, 8, 14, 10, 0), // Año, mes (0-11), día, hora, minuto
-            end: new Date(2023, 8, 14, 12, 0),
-            ejercicios: ['Dominadas', 'Remo con barra', 'Curl de biceps', 'Curl de antebrazo']
-        },
-        {
-            title: 'Rutina legs',
-            start: new Date(2023, 8, 15, 10, 0), // Año, mes (0-11), día, hora, minuto
-            end: new Date(2023, 8, 15, 12, 0),
-            ejercicios: ['Sentadillas', 'Peso muerto', 'Extension de cuadriceps', 'Curl de femoral']
-        },
-      ];
 
       
     
