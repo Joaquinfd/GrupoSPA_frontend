@@ -23,6 +23,26 @@ function Navbar() {
     }
   };
 
+  const handleVerPlanner = (event) => {
+    if (token) {
+      navigate('/planner');
+    } else {
+      alert('Debes iniciar sesión para ver tu planner.');
+      event.preventDefault();
+      navigate('/ingreso');
+    }
+  };
+
+  const handleVerPerfil = (event) => {
+    if (token) {
+      navigate('/mi-perfil');
+    } else {
+      alert('Debes iniciar sesión para ver tu planner.');
+      event.preventDefault();
+      navigate('/ingreso');
+    }
+  };
+
   return (
     <header>
       <nav className="navbar">
@@ -35,10 +55,10 @@ function Navbar() {
         <li className="dropdown">
             <span className="dropbtn">Mi perfil</span>
             <div className="dropdown-content">
-              <NavLink to="/mi-perfil" activeclassname="active">
+              <NavLink to="/mi-perfil" activeclassname="active" onClick={handleVerPerfil}>
                 Mi Perfil
               </NavLink>
-              <NavLink to="/planner" activeclassname="active">
+              <NavLink to="/planner" activeclassname="active" onClick={handleVerPlanner}>
                 Mi planner
               </NavLink>
               <NavLink to="/crear-rutina" activeclassname="active" onClick={handleCrearRutina}>
