@@ -1,7 +1,8 @@
-  import React, { useState, useEffect  } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
   import './crear-rutina.css';
-  import { NavLink } from 'react-router-dom';
-
+  import { NavLink, useNavigate } from 'react-router-dom';
+  import TimePicker from 'react-time-picker';
+  import { AuthContext } from '../auth/authContext';
 
   import Button from '../components/button'; 
   import Image from '../components/images';
@@ -22,6 +23,9 @@
   import flexibility from '../../public/images/yoga.png';
 
   import axios from 'axios';
+  import { set } from 'date-fns';
+
+  
 
   // Hecho con ayuda de ChatGPT
   function Images() {
@@ -43,6 +47,69 @@
       let [mostrarEjercicios, setMostrarEjercicios] = useState(false); // Para mostrar los ejercicios de la rutina seleccionada por el usuario
       let [msjBoton, setMsjBoton] = useState('Buscar');
 
+      let [alertaHoraNula, setAlertaHoraNula] = useState(false); // Para mostrar los ejercicios de la rutina seleccionada por el usuario
+      let [horariosCorrectos, setHorariosCorrectos] = useState(false); // Para mostrar los ejercicios de la rutina seleccionada por el usuario
+
+      let [msgConfirmacion, setMsgConfirmacion] = useState('Confirmar horarios'); // Para mostrar los ejercicios de la rutina seleccionada por el usuario
+
+
+
+
+      const [usuarios, setUsuarios] = useState({}); // Estado inicial vacío
+    const navigate = useNavigate();
+    
+    const {token, logout} = useContext(AuthContext);
+    const [IdUsuario, setIdUsuario] = useState(null);
+    const [UsuarioActual, setUsuarioActual] = useState(null);
+
+    const [plannerIdInfo, setPLannerIdInfo] = useState([]); // Información del planner seleccionado
+
+
+    useEffect(() => {
+      const getUserId = async () => {
+        try {
+          if (token){
+          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/auth/currentUsuario/token`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+          setIdUsuario(response.data.idUsuario);
+        }
+        } catch (error) {
+          console.log(error);
+        }
+      };
+  
+      const getUser = async () => {
+        try {
+          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/usuarios/${IdUsuario}`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+            });
+          setUsuarioActual(response.data);
+          
+
+          console.log('getUser:', response.data);
+        } catch (error) {
+          alert(error);
+        }
+      };
+  
+      if (IdUsuario) {
+        getUser();
+      } else {
+        getUserId();
+      }
+    }, [IdUsuario]);
+
+
+
+
+
+
+
     
       let imagenes = {
         Masculino: {
@@ -58,6 +125,7 @@
 
       const atributo = ['Fuerza', 'Agilidad', 'Cardio', 'Flexibilidad'];
       const objetivo = ['Bajar de peso', 'Ganancia de masa muscular','Definición' ];
+
 
       let checkAllFieldsCompleted = () => {
           if (gender && physicalState && attribute) {
@@ -138,6 +206,147 @@
         }
 
       };
+
+      let handleSetHorarios = async () => {
+        try {
+          // Crear un objeto para almacenar los horarios de la rutina seleccionada
+          const horarios = {};
+          
+          // Iterar sobre los días y agregar los horarios y el estado del checkbox correspondientes
+          Object.keys(times).forEach((day) => {
+            horarios[day] = {
+              checked: times[day].checked,
+              time: times[day].checked ? times[day].time : null,
+            };
+          });
+      
+          // Mostrar los horarios en la consola (puedes eliminar esta línea en producción)
+          console.log('Horarios seleccionados:', horarios);
+
+          let dias_entrenamiento = [];
+
+          for (const day in horarios) {
+            if (horarios.hasOwnProperty(day)) {
+              const horario = horarios[day];
+              // console.log(`Día: ${day}, Checked: ${horario.checked}, Hora: ${horario.time}`);
+              // Realiza las acciones que necesitas con cada día y sus horarios aquí
+              if (horario.checked && !horario.time) {
+                // si esta checkeado el dia pero no tiene hora
+                alert('Debes seleccionar una hora para los días que quieras entrenar');
+              }
+
+              else if (horario.checked && horario.time) {
+                // si esta checkeado y tiene hora
+                dias_entrenamiento.push(day);
+                console.log('dia entrenamiento: ', day, horario.checked);
+                
+              }
+
+              else if (!horario.checked && !horario.time) {
+                // si no esta checkeado y no tiene hora
+              }
+
+              else if (!horario.checked && horario.time) {
+                // si no esta checkeado y tiene hora
+                // caso imposible
+                alert('Debes seleccionar una hora para los días que quieras entrenar');
+                console.log('Revisar caso imposible');
+              }
+            }
+          }
+
+          if (dias_entrenamiento.length >= 1) {
+
+
+            // si tiene al menos un día
+            setHorariosCorrectos(true);
+            console.log('hay horarios: hacer patch de planner');
+            // Realizar la solicitud PATCH con Axios
+            // const url = `${import.meta.env.VITE_BACKEND_URL}/planners/times/1`;
+            // axios.patch(url, tiemposConvertidos, {
+            //   headers: {
+            //     Authorization: `Bearer ${token}`
+            //   }
+            // })
+            // .then((response) => {
+            //   // Manejar la respuesta exitosa
+            //   console.log('Planner actualizado exitosamente:', response.data);
+            // })
+            // .catch((error) => {
+            //   // Manejar errores
+            //   console.error('Error al actualizar el planner:', error);
+            //   });
+            // setHorariosCorrectos(false);
+            // return;
+          }
+            
+
+          if (horariosCorrectos) {
+            // si todos los horarios fueron ingresados correctamente
+            console.log('hay horarios: hacer patch de planner');
+            // Realizar la solicitud PATCH con Axios
+            const url = `${import.meta.env.VITE_BACKEND_URL}/planners/times/1`;
+            axios.patch(url, horarios, {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
+            })
+            .then((response) => {
+              // Manejar la respuesta exitosa
+              console.log('Planner actualizado exitosamente:', response.data);
+            })
+            .catch((error) => {
+              // Manejar errores
+              console.error('Error al actualizar el planner:', error);
+              });
+            setHorariosCorrectos(false);
+            return;
+          }
+          
+      
+          // Puedes enviar los horarios a tu servidor o realizar otras acciones según tus necesidades
+      
+        } catch (error) {
+          console.error('Error al establecer los horarios de la rutina:', error);
+        }
+      };
+
+
+    
+
+      const [times, setTimes] = useState({
+        Lunes: { checked: false, time: '12:00' },
+        Martes: { checked: false, time: '12:00' },
+        Miercoles: { checked: false, time: '12:00' },
+        Jueves: { checked: false, time: '12:00' },
+        Viernes: { checked: false, time: '12:00' },
+        Sabado: { checked: false, time: '12:00' },
+        Domingo: { checked: false, time: '12:00' },
+      });
+    
+      const handleCheckboxChange = (day) => {
+        setTimes((prevTimes) => {
+          const updatedTimes = { ...prevTimes };
+          updatedTimes[day].checked = !updatedTimes[day].checked;
+    
+          // If the checkbox is checked, set the time to null
+          if (updatedTimes[day].checked) {
+            updatedTimes[day].time = null;
+          }
+    
+          return updatedTimes;
+        });
+      };
+    
+      const handleTimeChange = (day, value) => {
+        setTimes((prevTimes) => {
+          const updatedTimes = { ...prevTimes };
+          updatedTimes[day].time = value;
+          console.log(updatedTimes);
+          return updatedTimes;
+        });
+      };
+    
 
 
       return (
@@ -222,7 +431,7 @@
                   <p>{`Objetivo: ${rutina.objetivo}`}</p>
                   <p>{`Atributo físico: ${rutina.atributo_fisico}`}</p>
                   <p>{`Dificultad: ${rutina.dificultad_rutina}`}</p>
-                  <NavLink to={`/planner`} className={'boton-a-planner'}>Ver en planner</NavLink>
+                  {/* <NavLink to={`/planner`} className={'boton-a-planner'}>Ver en planner</NavLink> */}
                   
                 </div>
               ))}
@@ -241,6 +450,53 @@
               ))}
           
             </div>
+            
+          )}
+
+
+          {mostrarRutinas && mostrarEjercicios && (
+            <div className='rutinas-container'>
+              <h2>Horarios:</h2>
+
+              <table className='tabla-horarios-rutina' border="1">
+                    <thead>
+                      <tr>
+                        <th>Día</th>
+                        <th>Entreno (Si/No)</th>
+                        <th>Hora</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.keys(times).map((day) => (
+                        <tr key={day} className={times[day].checked ? 'row-checked' : ''}>
+                          <td>{day}</td>
+                          <td>
+                            <input
+                              type="checkbox"
+                              checked={times[day].checked}
+                              onChange={() => handleCheckboxChange(day)}
+                            />
+                          </td>
+                          <td className='time-picker-rutina'>
+                            {times[day].checked && (
+                              <TimePicker
+                                onChange={(value) => handleTimeChange(day, value)}
+                                value={times[day].time}
+                                clockIcon={null}
+                              />
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+
+
+
+              <button className="horarios-button" onClick={handleSetHorarios}>Confirmar horarios y rutina</button>
+          
+            </div>
+            
           )}
 
       </div>

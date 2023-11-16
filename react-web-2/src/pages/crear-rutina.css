@@ -1,3 +1,5 @@
+
+
 .rutinas-container {
     font-family: 'Roboto Condensed', Arial, sans-serif;
     background-color: #222; 
@@ -8,7 +10,8 @@
     z-index: 1;
     position: relative;
   }
-  .body-container::before {
+
+.body-container::before {
     content: "";
     position: fixed;
     top: 0;
@@ -59,3 +62,79 @@
   border-radius: 5px;
 }
 
+.horarios-button {
+  background-color: red; 
+    color: #fff; 
+    padding: 15px 20px; 
+    margin-top: 30px;
+    border: none; 
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar por encima */
+    transition: background-color 0.3s, box-shadow 0.3s; /* Transición suave de color de fondo y sombra */
+  
+    
+    &:hover {
+      background-color: grey; /* Color de fondo verde ligeramente más oscuro */
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Sombra ligera al pasar por encima */
+      transform: translateY(-5px);
+    }
+}
+
+.tabla-horarios-rutina {
+  background-color: #222; 
+  color: #fff; 
+  padding: 20px;
+  margin: 55px auto 0;
+  width: 80%;
+  z-index: 1;
+  position: relative;
+}
+
+.react-time-picker__inputGroup__input {
+  background-color: white;
+  color: black;
+  width: 100px !important;
+  height: 30px !important;
+}
+
+
+.react-time-picker__clear-button.react-time-picker__button {
+  margin-right: 15px;
+  background-color: red;
+  color: white;
+}
+
+.react-time-picker__clock-button.react-time-picker__button {
+  background-color: red;
+  color: white;
+}
+
+.row-checked {
+  height: 80px;
+}
+
+.react-time-picker__wrapper {
+  height: 80px;
+}
+
+input[type="checkbox"] {
+  /* Oculta el tick predeterminado */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #555;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+}
+
+input[type="checkbox"]:checked::before {
+  content: "x";
+  color: red;
+}
+
+.time-picker-rutina {
+  height: 80px;
+}
