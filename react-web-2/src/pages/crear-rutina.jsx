@@ -52,17 +52,15 @@ import React, { useState, useEffect, useContext } from 'react';
 
       let [msgConfirmacion, setMsgConfirmacion] = useState('Confirmar horarios'); // Para mostrar los ejercicios de la rutina seleccionada por el usuario
 
-
-
-
       const [usuarios, setUsuarios] = useState({}); // Estado inicial vacío
-    const navigate = useNavigate();
+      const navigate = useNavigate();
     
-    const {token, logout} = useContext(AuthContext);
-    const [IdUsuario, setIdUsuario] = useState(null);
-    const [UsuarioActual, setUsuarioActual] = useState(null);
+      const {token, logout} = useContext(AuthContext);
+      const [IdUsuario, setIdUsuario] = useState(null);
+      const [UsuarioActual, setUsuarioActual] = useState(null);
 
-    const [plannerIdInfo, setPLannerIdInfo] = useState([]); // Información del planner seleccionado
+      const [plannerIdInfo, setPLannerIdInfo] = useState([]); // Información del planner seleccionado
+      const [idPLanner, setIdPlanner] = useState(null); // Id del planner seleccionado para hacer get a api
 
 
     useEffect(() => {
@@ -99,6 +97,7 @@ import React, { useState, useEffect, useContext } from 'react';
   
       if (IdUsuario) {
         getUser();
+        
       } else {
         getUserId();
       }
@@ -106,11 +105,46 @@ import React, { useState, useEffect, useContext } from 'react';
 
 
 
+    let getPlanner = async (event) => {
+
+  
+      const apiUrl = `${import.meta.env.VITE_BACKEND_URL}/planners/user/${IdUsuario}`;
+
+      // Realizar la solicitud GET con Axios
+      axios.get(apiUrl, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+          
+      })
+      .then(response => {
+        setPLannerIdInfo(response.data);
+        console.log('planner:', plannerIdInfo);
+        console.log('planner id:', plannerIdInfo.planner.id);
+
+        setIdPlanner(plannerIdInfo.planner.id);
+        console.log('idPlanner seteado:', idPLanner);
+
+        
+        
+      })
+      .catch(error => {
+        console.error('Hubo un error:', error);
+      });
+
+      
+  };
+
+  useEffect (() => {getPlanner();}, []);
 
 
 
 
-    
+
+
+
+
+
       let imagenes = {
         Masculino: {
           default: hombre, // Imagen por defecto de hombre
@@ -214,21 +248,25 @@ import React, { useState, useEffect, useContext } from 'react';
           
           // Iterar sobre los días y agregar los horarios y el estado del checkbox correspondientes
           Object.keys(times).forEach((day) => {
-            horarios[day] = {
+            horarios[day.toLowerCase()] = {
               checked: times[day].checked,
-              time: times[day].checked ? times[day].time : null,
+              time: times[day].checked ? parseInt(times[day].time.split(':')[0]) : null,
             };
           });
       
           // Mostrar los horarios en la consola (puedes eliminar esta línea en producción)
-          console.log('Horarios seleccionados:', horarios);
+          console.log('Horarios:', horarios, 'tipo:', typeof horarios);
 
           let dias_entrenamiento = [];
+          let dataBody = {};
 
           for (const day in horarios) {
             if (horarios.hasOwnProperty(day)) {
               const horario = horarios[day];
-              // console.log(`Día: ${day}, Checked: ${horario.checked}, Hora: ${horario.time}`);
+              // console.log('horario:', horario, 'tipo:', typeof horario);
+              // console.log('horario.checked:', horario.checked, 'tipo:', typeof horario.checked);
+              console.log('horario.time:', horario.time, 'tipo:', typeof horario.time);
+
               // Realiza las acciones que necesitas con cada día y sus horarios aquí
               if (horario.checked && !horario.time) {
                 // si esta checkeado el dia pero no tiene hora
@@ -237,9 +275,7 @@ import React, { useState, useEffect, useContext } from 'react';
 
               else if (horario.checked && horario.time) {
                 // si esta checkeado y tiene hora
-                dias_entrenamiento.push(day);
-                console.log('dia entrenamiento: ', day, horario.checked);
-                
+                dias_entrenamiento.push(day);                
               }
 
               else if (!horario.checked && !horario.time) {
@@ -260,32 +296,17 @@ import React, { useState, useEffect, useContext } from 'react';
 
             // si tiene al menos un día
             setHorariosCorrectos(true);
-            console.log('hay horarios: hacer patch de planner');
-            // Realizar la solicitud PATCH con Axios
-            // const url = `${import.meta.env.VITE_BACKEND_URL}/planners/times/1`;
-            // axios.patch(url, tiemposConvertidos, {
-            //   headers: {
-            //     Authorization: `Bearer ${token}`
-            //   }
-            // })
-            // .then((response) => {
-            //   // Manejar la respuesta exitosa
-            //   console.log('Planner actualizado exitosamente:', response.data);
-            // })
-            // .catch((error) => {
-            //   // Manejar errores
-            //   console.error('Error al actualizar el planner:', error);
-            //   });
-            // setHorariosCorrectos(false);
-            // return;
+            
+            
           }
             
 
           if (horariosCorrectos) {
             // si todos los horarios fueron ingresados correctamente
-            console.log('hay horarios: hacer patch de planner');
+            console.log(`hay horarios: hacer patch a planner de:`, horarios);
             // Realizar la solicitud PATCH con Axios
-            const url = `${import.meta.env.VITE_BACKEND_URL}/planners/times/1`;
+
+            const url = `${import.meta.env.VITE_BACKEND_URL}/planners/times/${idPLanner}`;
             axios.patch(url, horarios, {
               headers: {
                 Authorization: `Bearer ${token}`
@@ -299,6 +320,7 @@ import React, { useState, useEffect, useContext } from 'react';
               // Manejar errores
               console.error('Error al actualizar el planner:', error);
               });
+
             setHorariosCorrectos(false);
             return;
           }
@@ -342,7 +364,7 @@ import React, { useState, useEffect, useContext } from 'react';
         setTimes((prevTimes) => {
           const updatedTimes = { ...prevTimes };
           updatedTimes[day].time = value;
-          console.log(updatedTimes);
+          // console.log(updatedTimes);
           return updatedTimes;
         });
       };
