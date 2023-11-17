@@ -21,6 +21,16 @@ function CustomEvent({ event }) {
             <li key={index}>{description}</li>
           ))}
         </ul>
+        <p>Ejercicios:</p>
+          <ul>
+            {Array.isArray(event.ejercicios) &&
+              event.ejercicios.map((ejercicio, index) => (
+                <li key={index}>
+                  {`${ejercicio.nombre_ejercicio} - ${ejercicio.descripcion} - Grupo Muscular: ${ejercicio.grupo_muscular}`}
+                </li>
+              ))}
+          </ul>
+
         </div>
       )}
     </div>
