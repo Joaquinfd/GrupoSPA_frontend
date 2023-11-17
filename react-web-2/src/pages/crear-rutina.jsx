@@ -41,7 +41,7 @@ import React, { useState, useEffect, useContext } from 'react';
       let [mostrarRutinas, setMostrarRutinas] = useState(false); // Para mostrar las rutinas disponibles
       let [RutinaEjercicios, setRutinaEjercicios] = useState([]); // Rutinas disponibles para el usuario almacenadas
 
-      let [id_rutina, setIdRutina] = useState(); 
+      let [IdRutina, setIdRutina] = useState(); 
       let [ejerciciosRutina, setEjerciciosRutina] = useState([]);
 
       let [mostrarEjercicios, setMostrarEjercicios] = useState(false); // Para mostrar los ejercicios de la rutina seleccionada por el usuario
@@ -61,6 +61,9 @@ import React, { useState, useEffect, useContext } from 'react';
 
       const [plannerIdInfo, setPLannerIdInfo] = useState([]); // Información del planner seleccionado
       const [idPLanner, setIdPlanner] = useState(null); // Id del planner seleccionado para hacer get a api
+
+      const [mostrarBotonPlanner, setMostrarBotonPlanner] = useState(false); // Para mostrar el botón de ver en planner
+      const [hacerPatch, setHacerPatch] = useState(false); // Para mostrar el botón de ver en planner
 
 
     useEffect(() => {
@@ -104,38 +107,6 @@ import React, { useState, useEffect, useContext } from 'react';
     }, [IdUsuario]);
 
 
-
-  //   let getPlanner = async (event) => {
-
-  
-  //     const apiUrl = `${import.meta.env.VITE_BACKEND_URL}/planners/user/${IdUsuario}`;
-
-  //     // Realizar la solicitud GET con Axios
-  //     axios.get(apiUrl, {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`
-  //         }
-          
-  //     })
-  //     .then(response => {
-  //       setPLannerIdInfo(response.data);
-  //       console.log('planner:', plannerIdInfo);
-  //       console.log('planner id:', plannerIdInfo.planner.id);
-
-  //       setIdPlanner(plannerIdInfo.planner.id);
-  //       console.log('idPlanner seteado:', idPLanner);
-
-        
-        
-  //     })
-  //     .catch(error => {
-  //       console.error('Hubo un error:', error);
-  //     });
-
-      
-  // };
-
-  // useEffect (() => {getPlanner();}, []);
   useEffect(() => {
     const getPlanner = async () => {
       try {
@@ -159,14 +130,6 @@ import React, { useState, useEffect, useContext } from 'react';
       getPlanner();
     }
   }, [IdUsuario, token]);
-
-
-
-
-
-
-
-
 
 
       let imagenes = {
@@ -287,8 +250,6 @@ import React, { useState, useEffect, useContext } from 'react';
           for (const day in horarios) {
             if (horarios.hasOwnProperty(day)) {
               const horario = horarios[day];
-              // console.log('horario:', horario, 'tipo:', typeof horario);
-              // console.log('horario.checked:', horario.checked, 'tipo:', typeof horario.checked);
               console.log('horario.time:', horario.time, 'tipo:', typeof horario.time);
 
               // Realiza las acciones que necesitas con cada día y sus horarios aquí
@@ -299,7 +260,8 @@ import React, { useState, useEffect, useContext } from 'react';
 
               else if (horario.checked && horario.time) {
                 // si esta checkeado y tiene hora
-                dias_entrenamiento.push(day);                
+                dias_entrenamiento.push(day);  
+                setHacerPatch(true);              
               }
 
               else if (!horario.checked && !horario.time) {
@@ -315,30 +277,33 @@ import React, { useState, useEffect, useContext } from 'react';
             }
           }
 
+          // if (dias_entrenamiento.length >= 1) {
+          //   // si tiene al menos un día
+          //   setHorariosCorrectos(true);
+          // }
+            
+
           if (dias_entrenamiento.length >= 1) {
-
-
-            // si tiene al menos un día
-            setHorariosCorrectos(true);
-            
-            
-          }
-            
-
-          if (horariosCorrectos) {
-            // si todos los horarios fueron ingresados correctamente
+            // Si todos los horarios fueron ingresados correctamente...
             console.log(`hay horarios: hacer patch a planner de:`, horarios);
             // Realizar la solicitud PATCH con Axios
 
+            const data = {
+              horarios: horarios,
+              IdRutina: IdRutina,
+            }
+
             const url = `${import.meta.env.VITE_BACKEND_URL}/planners/times/${idPLanner}`;
-            axios.patch(url, horarios, {
+            axios.patch(url, data, {
               headers: {
                 Authorization: `Bearer ${token}`
               }
             })
             .then((response) => {
               // Manejar la respuesta exitosa
+              setMostrarBotonPlanner(true);
               console.log('Planner actualizado exitosamente:', response.data);
+              
             })
             .catch((error) => {
               // Manejar errores
@@ -348,10 +313,7 @@ import React, { useState, useEffect, useContext } from 'react';
             setHorariosCorrectos(false);
             return;
           }
-          
-      
-          // Puedes enviar los horarios a tu servidor o realizar otras acciones según tus necesidades
-      
+                
         } catch (error) {
           console.error('Error al establecer los horarios de la rutina:', error);
         }
@@ -388,7 +350,6 @@ import React, { useState, useEffect, useContext } from 'react';
         setTimes((prevTimes) => {
           const updatedTimes = { ...prevTimes };
           updatedTimes[day].time = value;
-          // console.log(updatedTimes);
           return updatedTimes;
         });
       };
@@ -540,7 +501,19 @@ import React, { useState, useEffect, useContext } from 'react';
 
 
               <button className="horarios-button" onClick={handleSetHorarios}>Confirmar horarios y rutina</button>
+              
+
           
+            </div>
+            
+          )}
+
+
+          {mostrarRutinas && mostrarEjercicios && mostrarBotonPlanner && (
+            <div className='rutinas-container'>
+              
+              <NavLink to={`/planner`} className={'boton-a-planner'}>Ver en planner</NavLink>
+
             </div>
             
           )}

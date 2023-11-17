@@ -131,7 +131,7 @@ function Planner() {
     // useEffect (() => {generarEventosRutinas();}, [rutinasDisponibles]);
 
     const generarEventosRutinas = () => {
-      console.log('dentro de generarEventosRutinas', plannerInfo);
+      console.log('dentro de generarEventosRutinas AHORA', plannerInfo.dias);
       const eventosRutinas = [];
     
       plannerInfo.dias &&
