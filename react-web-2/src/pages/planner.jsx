@@ -111,73 +111,133 @@ function Planner() {
     // useEffect (() => {handleRutina();}, []);
 
 
+    // const generarEventosRutinas = () => {
+
+    //     const eventosRutinas = [];
+
+    //     rutinasDisponibles.forEach(rutina => {
+    //         eventosRutinas.push({
+    //             title: rutina.nombre_rutina,
+    //             start: new Date(2023, 9, 10, 12, 0), // Año, mes (0-11), día, hora, minuto
+    //             end: new Date(2023, 9, 12, 12, 0),
+    //             descripcion: [rutina.descripcion],
+    //             // Asegúrate de agregar las propiedades necesarias según la estructura de tus datos
+    //         });
+    //     });
+
+    //     return eventosRutinas;
+    // };
+
+    // useEffect (() => {generarEventosRutinas();}, [rutinasDisponibles]);
+
     const generarEventosRutinas = () => {
+      console.log('dentro de generarEventosRutinas', plannerInfo);
+      const eventosRutinas = [];
+    
+      plannerInfo.dias &&
+        Object.entries(plannerInfo.dias).forEach(([dia, hora]) => {
+          if (hora !== null) {
+            // Mapear días de la semana a números (0-6)
+            const numeroDia = {
+              domingo: 0,
+              lunes: 1,
+              martes: 2,
+              miercoles: 3,
+              jueves: 4,
+              viernes: 5,
+              sabado: 6,
+            }[dia.toLowerCase()];
+    
+            if (numeroDia !== undefined) {
+              // Obtener las rutinas asociadas para el día actual
+              const rutinasAsociadas = plannerInfo.rutinas.filter(
+                (rutina) => rutina[dia] !== null
+              );
+    
+              rutinasAsociadas.forEach((rutinaAsociada) => {
+                const { nombre_rutina, descripcion, dificultad_rutina } = rutinaAsociada;
+                const { ejercicios } = plannerInfo;
 
-        const eventosRutinas = [];
+                console.log('constantes obt',ejercicios);
+                console.log([descripcion])
+    
+                console.log('crear evento', dia, hora, nombre_rutina, descripcion, dificultad_rutina);
+    
+                // // Crear un evento para cada rutina asociada
+                // eventosRutinas.push({
+                //   title: `${nombre_rutina} - ${descripcion} - Dificultad: ${dificultad_rutina}`,
+                //   start: moment().day(numeroDia).set('hour', hora).toDate(),
+                //   end: moment().day(numeroDia).set('hour', hora + 1).toDate(),
+                //   // Puedes ajustar las propiedades según la estructura de tus datos
+                //   // descripcion: ejercicios,
+                //   ejercicios: ejercicios
+                // });
 
-        rutinasDisponibles.forEach(rutina => {
-            eventosRutinas.push({
-                title: rutina.nombre_rutina,
-                start: new Date(2023, 9, 10, 12, 0), // Año, mes (0-11), día, hora, minuto
-                end: new Date(2023, 9, 12, 12, 0),
-                descripcion: [rutina.descripcion],
-                // Asegúrate de agregar las propiedades necesarias según la estructura de tus datos
-            });
-        });
+                const fechaInicio = moment().startOf('week').day(numeroDia).set('hour', hora);
+                const fechaFin = moment(fechaInicio).set('hour', hora + 1);
 
-        return eventosRutinas;
-    };
+                while (fechaInicio.isBefore(moment().endOf('year').add(1, 'year'))) {
+                  eventosRutinas.push({
+                    title: `${nombre_rutina} - ${descripcion} - Dificultad: ${dificultad_rutina}`,
+                    start: fechaInicio.toDate(),
+                    end: fechaFin.toDate(),
+                    ejercicios: ejercicios
+                  });
 
-    useEffect (() => {generarEventosRutinas();}, [rutinasDisponibles]);
-
-
-    let getPlanner = async (event) => {
-
-  
-        const apiUrl = `${import.meta.env.VITE_BACKEND_URL}/planners/user/${IdUsuario}`;
-  
-        // Realizar la solicitud GET con Axios
-        axios.get(apiUrl, {
-            headers: {
-              Authorization: `Bearer ${token}`
+                  // Avanzar al próximo domingo
+                  fechaInicio.add(1, 'week');
+                  fechaFin.add(1, 'week');
+                }
+                
+              });
             }
-            
-        })
-        .then(response => {
-          setPLannerIdInfo(response.data);
-          console.log('planner:', plannerIdInfo);
-          console.log('planner id:', plannerIdInfo.planner.id);
-
-          setIdPlanner(plannerIdInfo.planner.id);
-          console.log('idPlanner seteado:', idPLanner);
-  
-          
-          
-        })
-        .catch(error => {
-          console.error('Hubo un error:', error);
+          }
         });
-
-        axios.get(`${import.meta.env.VITE_BACKEND_URL}/planners/${idPLanner}`, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-            
-        })
-        .then(response => {
-          setPLannerInfo(response.data);
-          console.log('planner de get planner por id_planner:', plannerInfo);
-          console.log('planner de get planner por id_planner:', plannerInfo.ejercicios);
-          
-        })
-        .catch(error => {
-          console.error('Hubo un error:', error);
-        });
-
-        
+      
+      return eventosRutinas;
     };
+    
+    
+    
+    
 
-    useEffect (() => {getPlanner();}, []);
+
+    useEffect(() => {
+      const getPlanner = async () => {
+        try {
+          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/planners/user/${IdUsuario}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+    
+          // Utiliza la respuesta directamente en lugar de almacenarla en un estado intermedio
+          const plannerId = response.data.planner.id;
+          setIdPlanner(plannerId);
+    
+          // Realiza la segunda solicitud con el ID del planner
+          const plannerResponse = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/planners/${plannerId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+    
+          // Utiliza la respuesta directamente
+          setPLannerInfo(plannerResponse.data);
+    
+          // Aquí puedes realizar cualquier otra lógica basada en la información del planner
+          console.log('Días de rutina:', plannerResponse.data.dias);
+          console.log('Rutinas:', plannerResponse.data.rutinas);
+          console.log('Ejercicios:', plannerResponse.data.ejercicios);
+        } catch (error) {
+          console.error('Hubo un error:', error);
+        }
+      };
+    
+      if (IdUsuario) {
+        getPlanner();
+      }
+    }, [IdUsuario, token]);
 
     
                 
