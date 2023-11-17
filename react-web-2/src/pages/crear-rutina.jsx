@@ -105,37 +105,61 @@ import React, { useState, useEffect, useContext } from 'react';
 
 
 
-    let getPlanner = async (event) => {
+  //   let getPlanner = async (event) => {
 
   
-      const apiUrl = `${import.meta.env.VITE_BACKEND_URL}/planners/user/${IdUsuario}`;
+  //     const apiUrl = `${import.meta.env.VITE_BACKEND_URL}/planners/user/${IdUsuario}`;
 
-      // Realizar la solicitud GET con Axios
-      axios.get(apiUrl, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+  //     // Realizar la solicitud GET con Axios
+  //     axios.get(apiUrl, {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`
+  //         }
           
-      })
-      .then(response => {
-        setPLannerIdInfo(response.data);
-        console.log('planner:', plannerIdInfo);
-        console.log('planner id:', plannerIdInfo.planner.id);
+  //     })
+  //     .then(response => {
+  //       setPLannerIdInfo(response.data);
+  //       console.log('planner:', plannerIdInfo);
+  //       console.log('planner id:', plannerIdInfo.planner.id);
 
-        setIdPlanner(plannerIdInfo.planner.id);
-        console.log('idPlanner seteado:', idPLanner);
+  //       setIdPlanner(plannerIdInfo.planner.id);
+  //       console.log('idPlanner seteado:', idPLanner);
 
         
         
-      })
-      .catch(error => {
-        console.error('Hubo un error:', error);
-      });
+  //     })
+  //     .catch(error => {
+  //       console.error('Hubo un error:', error);
+  //     });
 
       
-  };
+  // };
 
-  useEffect (() => {getPlanner();}, []);
+  // useEffect (() => {getPlanner();}, []);
+  useEffect(() => {
+    const getPlanner = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/planners/user/${IdUsuario}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        // Utiliza la respuesta directamente en lugar de almacenarla en un estado intermedio
+        const plannerId = response.data.planner.id;
+        setIdPlanner(plannerId);
+  
+        
+      } catch (error) {
+        console.error('Hubo un error:', error);
+      }
+    };
+  
+    if (IdUsuario) {
+      getPlanner();
+    }
+  }, [IdUsuario, token]);
+
 
 
 
