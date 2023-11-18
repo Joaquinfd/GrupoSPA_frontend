@@ -18,7 +18,7 @@ function Ingreso() {
     const [inputWeight, setInputWeight] = useState('');
     const [inputGender, setInputGender] = useState('masculino');
 
-    const [inputObjetivo, setInputObjetivo] = useState('');
+    const [inputObjetivo, setInputObjetivo] = useState('bajar_peso');
     const [inputDificultad, setInputDificultad] = useState('');
     const handleSignUpClick = () => {
         setShowRegister(!showRegister);
@@ -28,7 +28,7 @@ function Ingreso() {
         setInputAge('');
         setInputWeight('');
         setInputGender('masculino');
-        setInputObjetivo('');
+        setInputObjetivo('bajar_peso');
         setInputDificultad('');
     };
 
