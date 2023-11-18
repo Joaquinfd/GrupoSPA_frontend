@@ -1,13 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import './ingreso.css';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Link, useNavigate  } from 'react-router-dom';
 import axios from 'axios';
-
+import { AuthContext } from '../auth/authContext';
 
 
 function Ingreso() {
+    const {token, setToken} = useContext(AuthContext)
+    const navigate = useNavigate();
 
-    
     const [showRegister, setShowRegister] = useState(false);
 
     const [inputEmail, setInputEmail] = useState(''); 
@@ -17,42 +18,8 @@ function Ingreso() {
     const [inputWeight, setInputWeight] = useState('');
     const [inputGender, setInputGender] = useState('masculino');
 
-    const [inputObjetivo, setInputObjetivo] = useState('');
+    const [inputObjetivo, setInputObjetivo] = useState('bajar_peso');
     const [inputDificultad, setInputDificultad] = useState('');
-
-    const enlaceApiUsuarios = 'http://localhost:3000/usuarios';
-
-
-    const [mostrarLinkPerfil, setMostrarLinkPerfil] = useState(false);
-
-
-
-
-    //ejemplo de patch
-
-    // const patchUsuario = async (userId, dataToUpdate) => {
-    //     const url = `http://localhost:3000/usuarios/update/${userId}`;
-      
-    //     try {
-    //       const response = await axios.patch(url, dataToUpdate);
-    //       // En Axios, simplemente pasas la URL y los datos a enviar para la solicitud PATCH
-      
-    //       console.log('Usuario actualizado:', response.data);
-    //       // Aquí podrías manejar la respuesta como necesites
-    //     } catch (error) {
-    //       console.error('Hubo un problema al intentar actualizar el usuario:', error);
-    //       // Aquí podrías manejar el error de manera adecuada en tu aplicación
-    //     }
-    //   };
-      
-    //   // Llamada a la función para actualizar un usuario específico
-    //   const userId = 1; // ID del usuario que quieres actualizar
-    //   const dataToUpdate = {
-    //     peso: 80,
-    //   };
-    
-
-
     const handleSignUpClick = () => {
         setShowRegister(!showRegister);
         setInputEmail('');
@@ -61,33 +28,44 @@ function Ingreso() {
         setInputAge('');
         setInputWeight('');
         setInputGender('masculino');
-        setInputObjetivo('');
+        setInputObjetivo('bajar_peso');
         setInputDificultad('');
     };
 
     const handleLoginSubmit = async (event) => {
         event.preventDefault();
-        // Lógica de inicio de sesión con get al servidor, se hace get general, debe hacer get al usuario
-        // indicar el enlace necesario para eso.
         console.log('Iniciar Sesión:', inputEmail, inputPassword);
 
-        const enlace_get = `${enlaceApiUsuarios}/getemail/${inputEmail}`;
+        const loginData = {
+            mail: inputEmail,
+            contraseña: inputPassword
+          };
+        try {
+            const respuesta = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/usuarios/login`, loginData);
 
-        axios.get(enlace_get) // Modificar el enlace segun corresponda
-        .then(response => {
-            console.log(response.data);
-            setMostrarLinkPerfil(true);
-        })
-        .catch(error => {
-            console.error(error);
-        });
+
+            // Se guarda el token en localStorage
+            const access_token = respuesta.data.access_token;
+            setToken(access_token); 
+            console.log(access_token);
+            navigate('/mi-perfil');
+            
+        }
+        catch(error){
+            console.error('Error en el inicio de sesión:', error);
+            if (error.response) {
+                if (error.response.status === 400) {
+                  alert('Credenciales incorrectas. Por favor, inténtalo de nuevo.');
+                } else {
+                  console.error('Error en el servidor:', error.response.data);
+                }
+            }
+        }
     };
 
     const handleRegisterSubmit = async (event) => {
         event.preventDefault();
-        // Lógica de registro con post al servidor
-        console.log('Registrarse:', inputEmail, inputPassword, inputName, inputAge, inputWeight, inputGender);
-
+        console.log('Registrarse:', inputEmail, inputPassword, inputName, inputAge, inputWeight, inputGender, inputObjetivo);
         const bodyParameters = {
             nombre_usuario: inputName,
             objetivo: inputObjetivo,
@@ -99,43 +77,45 @@ function Ingreso() {
         };
 
         try {
-            const response = await axios.post(`${enlaceApiUsuarios}/create/`, bodyParameters);
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/usuarios/signup`, bodyParameters);
             console.log(response.data); 
             console.log('Usuario creado: ', bodyParameters);
-
-            const response_get_email = await axios.get(`${enlaceApiUsuarios}/get/${inputEmail}`);
+            const access_token = response.data.access_token;
+            setToken(access_token);
             
-            // toma el id del usuario creado recientemente y se lo da al post de planner como llave foranea
-            const response_planner = await axios.post(`http://localhost:3000/planner/create/`, {id_usuario: response_get_email.data.id});
-
-            setMostrarLinkPerfil(true);
+            await handleLoginSubmit(event);
+            alert('¡Registro exitoso!');
         } catch (error) {
             console.error("Error en la solicitud:", error);
             if (error.response) {
+                if (error.response.data.errors && Array.isArray(error.response.data.errors)) {
+                    const validationErrors = error.response.data.errors.map((err) => err.message);
+                    alert(validationErrors.join('\n'));
+                } else {
+                    alert('Error en el servidor. Por favor, inténtalo de nuevo.');
+                }
+            } else {
+                alert('Error en la solicitud. Por favor, inténtalo de nuevo.');
                 console.error("Respuesta del servidor:", error.response.data);
             }
         }
 
-        
     };
-
-    
-
+  
     return (
-
-
         <div className='ingreso-main-container'>
                     <div className='ingreso-form-container'>
                         <h1>{showRegister ? 'Regístrate' : 'Inicia sesión'}</h1>
                         <form onSubmit={showRegister ? handleRegisterSubmit : handleLoginSubmit} className='ingreso-form'>
                             <div className='form-element'>
-                                <label htmlFor="username">Usuario:</label>
+                                <label htmlFor="username">Mail:</label>
                                 <input 
                                     type="text" 
                                     placeholder='tumail@plannerSPA.com' 
                                     className='ingreso-username'
                                     value={inputEmail}
                                     onChange={(e) => setInputEmail(e.target.value)}
+                                    autoComplete="username"
                                     required
                                 />
                             </div>
@@ -145,6 +125,7 @@ function Ingreso() {
                                     type="password" 
                                     placeholder='contraseña'
                                     className='ingreso-password'
+                                    autoComplete="current-password"
                                     value={inputPassword}
                                     onChange={(e) => setInputPassword(e.target.value)}
                                     required
@@ -204,13 +185,28 @@ function Ingreso() {
                                     </select>
                                 </div>
                             )}
+                            {showRegister && (
+                            <div className='form-element'>
+                                <label htmlFor="objetivo">Objetivo:</label>
+                                <select 
+                                id="objetivo" 
+                                name="objetivo" 
+                                className='ingreso-objetivo'
+                                value={inputObjetivo}
+                                onChange={(e) => setInputObjetivo(e.target.value)}
+                                >
+                                <option value="bajar_peso">Bajar de peso</option>
+                                <option value="ganar_masa_muscular">Ganancia de Masa Muscular</option>
+                                <option value="definicion">Definición</option>
+                                </select>
+                            </div>
+                            )}
                             <button type='submit' className='ingreso-submit-form'>
                                 {showRegister ? 'Registrarse' : 'Entrar'}
                             </button>
                             <button type='button' onClick={handleSignUpClick} className='ingreso-boton-registro'>
                                 {showRegister ? '¿Ya tienes cuenta? Inicia sesión' : '¿No tienes cuenta? Regístrate'}
                             </button>
-                            {mostrarLinkPerfil && <Link to="/mi-perfil" className='link-mi-perfil'>Mi perfil</Link>}
                         </form>
                     </div>
                 </div>

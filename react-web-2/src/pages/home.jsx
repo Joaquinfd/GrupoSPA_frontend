@@ -63,7 +63,7 @@ export default function Home() {
                         ))}
                         {/* src: https://cloudinary.com/blog/add-a-responsive-image-carousel-to-your-react-app */}
                     </Carousel>
-                    <Link to="/crear-rutina">
+                    <Link to="/ingreso">
                         <button className='boton-registro' id='home-button-br'>
                             <h2>Empieza ahora!</h2>
                         </button>

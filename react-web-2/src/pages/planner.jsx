@@ -1,130 +1,246 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useEffect, useContext } from 'react';
 import moment from 'moment';
 import 'moment/locale/es';
 import './planner.css';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import CustomEvent from '../components/Customevent';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { AuthContext } from '../auth/authContext';
+import { set } from 'date-fns';
+import { id } from 'date-fns/locale';
 
 function Planner() {
 
     const localizer = momentLocalizer(moment);
-
     const [rutinasDisponibles, setRutinasDisponibles] = useState([]); // Rutinas disponibles para el usuario almacenadas
-
     const [idPLanner, setIdPlanner] = useState(null); // Id del planner seleccionado para hacer get a api
-
     const [plannerInfo, setPLannerInfo] = useState([]); // Información del planner seleccionado
 
+    const [usuarios, setUsuarios] = useState({}); // Estado inicial vacío
+    const navigate = useNavigate();
+    
+    const {token, logout} = useContext(AuthContext);
+    const [IdUsuario, setIdUsuario] = useState(null);
+    const [UsuarioActual, setUsuarioActual] = useState(null);
 
-    let handleRutina = async (event) => {
+    const [plannerIdInfo, setPLannerIdInfo] = useState([]); // Información del planner seleccionado
 
-        const bodyParameters = {
-            genero: 'Femenino',
-            objetivo: 'Bajar de peso',
-            atributo_fisico: 'Fuerza',
-        };
-  
-        const gender = bodyParameters.genero;
-        const objetivo = bodyParameters.objetivo;
-        const attribute = bodyParameters.atributo_fisico;
-  
-  
-        const apiUrl = `http://localhost:3000/rutinas/${gender}/${objetivo}/${attribute}`;
-  
-        // Realizar la solicitud GET con Axios
-        axios.get(apiUrl)
-        .then(response => {
-          setRutinasDisponibles(response.data);
-          console.log('Rutinas disponibles:', rutinasDisponibles)
-  
-          // Acceder a cada rutina individual dentro del array
-          response.data.forEach(rutina => {
-            // Acceder a cada propiedad de la rutina
-            const nombreRutina = rutina.nombre_rutina;
-            const genero = rutina.genero;
-            const objetivo = rutina.objetivo;
-            const atributoFisico = rutina.atributo_fisico;
-            const dificultad = rutina.dificultad_rutina;
-            const id = rutina.id;
+
+    useEffect(() => {
+      const getUserId = async () => {
+        try {
+          if (token){
+          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/auth/currentUsuario/token`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
           });
+          setIdUsuario(response.data.idUsuario);
+        }
+        } catch (error) {
+          console.log(error);
+        }
+      };
+  
+      const getUser = async () => {
+        try {
+          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/usuarios/${IdUsuario}`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+            });
+          setUsuarioActual(response.data);
           
-        })
-        .catch(error => {
-          console.error('Hubo un error:', error);
-        });
-    };
 
-    useEffect (() => {handleRutina();}, []);
+          console.log('getUser:', response.data);
+        } catch (error) {
+          alert(error);
+        }
+      };
+  
+      if (IdUsuario) {
+        getUser();
+      } else {
+        getUserId();
+      }
+    }, [IdUsuario]);
 
+
+
+    // let handleRutina = async (event) => {
+
+    //     const bodyParameters = {
+    //         genero: 'Femenino',
+    //         objetivo: 'Bajar de peso',
+    //         atributo_fisico: 'Fuerza',
+    //     };
+  
+    //     const gender = bodyParameters.genero;
+    //     const objetivo = bodyParameters.objetivo;
+    //     const attribute = bodyParameters.atributo_fisico;
+
+  
+  
+    //     const apiUrl = `${import.meta.env.VITE_BACKEND_URL}/rutinas/${gender}/${objetivo}/${attribute}`;
+  
+    //     // Realizar la solicitud GET con Axios
+    //     axios.get(apiUrl)
+    //     .then(response => {
+    //       setRutinasDisponibles(response.data);
+    //       console.log('Rutinas disponibles:', rutinasDisponibles)
+  
+    //       // Acceder a cada rutina individual dentro del array
+    //       response.data.forEach(rutina => {
+    //         // Acceder a cada propiedad de la rutina
+    //         const nombreRutina = rutina.nombre_rutina;
+    //         const genero = rutina.genero;
+    //         const objetivo = rutina.objetivo;
+    //         const atributoFisico = rutina.atributo_fisico;
+    //         const dificultad = rutina.dificultad_rutina;
+    //         const id = rutina.id;
+    //       });
+          
+    //     })
+    //     .catch(error => {
+    //       console.error('Hubo un error:', error);
+    //     });
+    // };
+
+    // useEffect (() => {handleRutina();}, []);
+
+
+    // const generarEventosRutinas = () => {
+
+    //     const eventosRutinas = [];
+
+    //     rutinasDisponibles.forEach(rutina => {
+    //         eventosRutinas.push({
+    //             title: rutina.nombre_rutina,
+    //             start: new Date(2023, 9, 10, 12, 0), // Año, mes (0-11), día, hora, minuto
+    //             end: new Date(2023, 9, 12, 12, 0),
+    //             descripcion: [rutina.descripcion],
+    //             // Asegúrate de agregar las propiedades necesarias según la estructura de tus datos
+    //         });
+    //     });
+
+    //     return eventosRutinas;
+    // };
+
+    // useEffect (() => {generarEventosRutinas();}, [rutinasDisponibles]);
 
     const generarEventosRutinas = () => {
+      console.log('dentro de generarEventosRutinas AHORA', plannerInfo.dias);
+      const eventosRutinas = [];
+    
+      plannerInfo.dias &&
+        Object.entries(plannerInfo.dias).forEach(([dia, hora]) => {
+          if (hora !== null) {
+            // Mapear días de la semana a números (0-6)
+            const numeroDia = {
+              domingo: 0,
+              lunes: 1,
+              martes: 2,
+              miercoles: 3,
+              jueves: 4,
+              viernes: 5,
+              sabado: 6,
+            }[dia.toLowerCase()];
+    
+            if (numeroDia !== undefined) {
+              // Obtener las rutinas asociadas para el día actual
+              const rutinasAsociadas = plannerInfo.rutinas.filter(
+                (rutina) => rutina[dia] !== null
+              );
+    
+              rutinasAsociadas.forEach((rutinaAsociada) => {
+                const { nombre_rutina, descripcion, dificultad_rutina } = rutinaAsociada;
+                const { ejercicios } = plannerInfo;
 
-        const eventosRutinas = [];
+                console.log('constantes obt',ejercicios);
+                console.log([descripcion])
+    
+                console.log('crear evento', dia, hora, nombre_rutina, descripcion, dificultad_rutina);
+    
+                // // Crear un evento para cada rutina asociada
+                // eventosRutinas.push({
+                //   title: `${nombre_rutina} - ${descripcion} - Dificultad: ${dificultad_rutina}`,
+                //   start: moment().day(numeroDia).set('hour', hora).toDate(),
+                //   end: moment().day(numeroDia).set('hour', hora + 1).toDate(),
+                //   // Puedes ajustar las propiedades según la estructura de tus datos
+                //   // descripcion: ejercicios,
+                //   ejercicios: ejercicios
+                // });
 
-        rutinasDisponibles.forEach(rutina => {
-            eventosRutinas.push({
-                title: rutina.nombre_rutina,
-                start: new Date(2023, 9, 10, 12, 0), // Año, mes (0-11), día, hora, minuto
-                end: new Date(2023, 9, 12, 12, 0),
-                descripcion: [rutina.descripcion],
-                // Asegúrate de agregar las propiedades necesarias según la estructura de tus datos
-            });
-        });
+                const fechaInicio = moment().startOf('week').day(numeroDia).set('hour', hora);
+                const fechaFin = moment(fechaInicio).set('hour', hora + 1);
 
-        return eventosRutinas;
-    };
+                while (fechaInicio.isBefore(moment().endOf('year').add(1, 'year'))) {
+                  eventosRutinas.push({
+                    title: `${nombre_rutina} - ${descripcion} - Dificultad: ${dificultad_rutina}`,
+                    start: fechaInicio.toDate(),
+                    end: fechaFin.toDate(),
+                    ejercicios: ejercicios
+                  });
 
-    useEffect (() => {generarEventosRutinas();}, [rutinasDisponibles]);
-
-
-    let getPlanner = async (event) => {
-
-  
-        setIdPlanner(1); // Id del planner seleccionado para hacer get a api, luego sera segun el usuario conectado
-        const apiUrl = `http://localhost:3000/planners/${idPLanner}`;
-  
-        // Realizar la solicitud GET con Axios
-        axios.get(apiUrl)
-        .then(response => {
-          setPLannerInfo(response.data);
-          console.log('planner:', plannerInfo)
-  
-          
-          
-        })
-        .catch(error => {
-          console.error('Hubo un error:', error);
-        });
-    };
-
-    useEffect (() => {getPlanner();}, []);
+                  // Avanzar al próximo domingo
+                  fechaInicio.add(1, 'week');
+                  fechaFin.add(1, 'week');
+                }
                 
+              });
+            }
+          }
+        });
+      
+      return eventosRutinas;
+    };
+    
+    
+    
     
 
 
+    useEffect(() => {
+      const getPlanner = async () => {
+        try {
+          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/planners/user/${IdUsuario}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+    
+          // Utiliza la respuesta directamente en lugar de almacenarla en un estado intermedio
+          const plannerId = response.data.planner.id;
+          setIdPlanner(plannerId);
+    
+          // Realiza la segunda solicitud con el ID del planner
+          const plannerResponse = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/planners/${plannerId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
+    
+          // Utiliza la respuesta directamente
+          setPLannerInfo(plannerResponse.data);
+    
+          // Aquí puedes realizar cualquier otra lógica basada en la información del planner
+          console.log('Días de rutina:', plannerResponse.data.dias);
+          console.log('Rutinas:', plannerResponse.data.rutinas);
+          console.log('Ejercicios:', plannerResponse.data.ejercicios);
+        } catch (error) {
+          console.error('Hubo un error:', error);
+        }
+      };
+    
+      if (IdUsuario) {
+        getPlanner();
+      }
+    }, [IdUsuario, token]);
 
-    const eventos = [
-        {
-            title: 'Rutina push',
-            start: new Date(2023, 8, 12, 10, 0), // Año, mes (0-11), día, hora, minuto
-            end: new Date(2023, 8, 12, 12, 0),
-            ejercicios: ['Press de banca', 'Press militar', 'Extension de triceps', 'Fondos en paralelas']
-        },
-        {
-            title: 'Rutina pull',
-            start: new Date(2023, 8, 14, 10, 0), // Año, mes (0-11), día, hora, minuto
-            end: new Date(2023, 8, 14, 12, 0),
-            ejercicios: ['Dominadas', 'Remo con barra', 'Curl de biceps', 'Curl de antebrazo']
-        },
-        {
-            title: 'Rutina legs',
-            start: new Date(2023, 8, 15, 10, 0), // Año, mes (0-11), día, hora, minuto
-            end: new Date(2023, 8, 15, 12, 0),
-            ejercicios: ['Sentadillas', 'Peso muerto', 'Extension de cuadriceps', 'Curl de femoral']
-        },
-      ];
+    
+                
 
       
     

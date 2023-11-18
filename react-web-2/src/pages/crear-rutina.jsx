@@ -1,296 +1,527 @@
-import React, { useState, useEffect  } from 'react';
-import './crear-rutina.css';
-import { NavLink } from 'react-router-dom';
+import React, { useState, useEffect, useContext } from 'react';
+  import './crear-rutina.css';
+  import { NavLink, useNavigate } from 'react-router-dom';
+  import TimePicker from 'react-time-picker';
+  import { AuthContext } from '../auth/authContext';
 
+  import Button from '../components/button'; 
+  import Image from '../components/images';
 
-import Button from '../components/button'; 
-import Image from '../components/images';
+  import mujer1 from '../../public/images/mujer_bajar_de_peso.webp';
+  import mujer2 from '../../public/images/mujer_definición.webp'; 
+  import mujer3 from '../../public/images/mujer_volumen.webp';
+  import mujer from '../../public/images/mujer.png';
 
-import mujer1 from '../../public/images/mujer_bajar_de_peso.webp';
-import mujer2 from '../../public/images/mujer_definición.webp'; 
-import mujer3 from '../../public/images/mujer_volumen.webp';
-import mujer from '../../public/images/mujer.png';
+  import hombre1 from '../../public/images/hombre_bajar_de_peso.webp';
+  import hombre2 from '../../public/images/hombre_definición.webp'; 
+  import hombre3 from '../../public/images/hombre_volumen.webp';
+  import hombre from '../../public/images/hombre.png';
 
-import hombre1 from '../../public/images/hombre_bajar_de_peso.webp';
-import hombre2 from '../../public/images/hombre_definición.webp'; 
-import hombre3 from '../../public/images/hombre_volumen.webp';
-import hombre from '../../public/images/hombre.png';
+  import strenght from '../../public/images/muscle.png';
+  import agility from '../../public/images/running.png';
+  import cardio from '../../public/images/heart.png';
+  import flexibility from '../../public/images/yoga.png';
 
-import strenght from '../../public/images/muscle.png';
-import agility from '../../public/images/running.png';
-import cardio from '../../public/images/heart.png';
-import flexibility from '../../public/images/yoga.png';
-
-import axios from 'axios';
-
-// Hecho con ayuda de ChatGPT
-function Images() {
-    let [gender, setGender] = useState(null); // Inicialmente, no se selecciona ningún género
-    let [physicalState, setPhysicalState] = useState(null); // Estado físico seleccionado, null al principio
-    let [attribute, setAttribute] = useState(null); // Atributos que se escogen (fuerza, velocidad, etc).
-    let [allFieldsCompleted, setAllFieldsCompleted] = useState(false); //Para que cuand complete todo, recién ahí le aparezca el botón guardar
-
-    let [estadoFisico_api, setEstadoFisico] = useState(null); // Estado físico seleccionado, null al principio, para hacer get a api
-    let [objetivo_api, setObjetivo] = useState(null); // Objetivo seleccionado, null al principio, para hacer get a api
-
-    let [rutinasDisponibles, setRutinasDisponibles] = useState([]); // Rutinas disponibles para el usuario almacenadas
-    let [mostrarRutinas, setMostrarRutinas] = useState(false); // Para mostrar las rutinas disponibles
-    let [RutinaEjercicios, setRutinaEjercicios] = useState([]); // Rutinas disponibles para el usuario almacenadas
-
-    let [id_rutina, setIdRutina] = useState(null); // Id de la rutina seleccionada para hacer get a api
-
-    const url_api = 'http://localhost:3000/rutinas';
-
-    let rutina_ejercicio = {}
-
-    let [rutinaId, setRutinaId] = useState(null); // Id de la rutina seleccionada por el usuario
-
-    let [ejercicicosRutina, setEjerciciosRutina] = useState([]); // Ejercicios de la rutina seleccionada por el usuario
-
-    let [mostrarEjercicios, setMostrarEjercicios] = useState(false); // Para mostrar los ejercicios de la rutina seleccionada por el usuario
-    let [msjBoton, setMsjBoton] = useState('Buscar'); // Para mostrar los ejercicios de la rutina seleccionada por el usuario
+  import axios from 'axios';
+  import { set } from 'date-fns';
 
   
-    let imagenes = {
-      Masculino: {
-        default: hombre, // Imagen por defecto de hombre
-        states: [hombre1, hombre2, hombre3], // Opciones de estado físico para hombre
-      },
-      Femenino: {
-        default: mujer, // Imagen por defecto de mujer
-        states: [mujer1, mujer2, mujer3], // Opciones de estado físico para mujer
-      },
 
-    };
+  // Hecho con ayuda de ChatGPT
+  function Images() {
+      let [gender, setGender] = useState(null); // Inicialmente, no se selecciona ningún género
+      let [physicalState, setPhysicalState] = useState(null); // Estado físico seleccionado, null al principio
+      let [attribute, setAttribute] = useState(null); // Atributos que se escogen (fuerza, velocidad, etc).
+      let [allFieldsCompleted, setAllFieldsCompleted] = useState(false); //Para que cuand complete todo, recién ahí le aparezca el botón guardar
 
-    const atributo = ['Fuerza', 'Agilidad', 'Cardio', 'Flexibilidad'];
-    const objetivo = ['Bajar de peso', 'Ganancia de masa muscular','Definición' ];
+      let [estadoFisico_api, setEstadoFisico] = useState(null); // Estado físico seleccionado, null al principio, para hacer get a api
+      let [objetivo_api, setObjetivo] = useState(null); // Objetivo seleccionado, null al principio, para hacer get a api
 
-    let checkAllFieldsCompleted = () => {
-        if (gender && physicalState && attribute) {
-          setAllFieldsCompleted(true);
-        } else {
-          setAllFieldsCompleted(false);
+      let [rutinasDisponibles, setRutinasDisponibles] = useState([]); // Rutinas disponibles para el usuario almacenadas
+      let [mostrarRutinas, setMostrarRutinas] = useState(false); // Para mostrar las rutinas disponibles
+      let [RutinaEjercicios, setRutinaEjercicios] = useState([]); // Rutinas disponibles para el usuario almacenadas
+
+      let [IdRutina, setIdRutina] = useState(); 
+      let [ejerciciosRutina, setEjerciciosRutina] = useState([]);
+
+      let [mostrarEjercicios, setMostrarEjercicios] = useState(false); // Para mostrar los ejercicios de la rutina seleccionada por el usuario
+      let [msjBoton, setMsjBoton] = useState('Buscar');
+
+      let [alertaHoraNula, setAlertaHoraNula] = useState(false); // Para mostrar los ejercicios de la rutina seleccionada por el usuario
+      let [horariosCorrectos, setHorariosCorrectos] = useState(false); // Para mostrar los ejercicios de la rutina seleccionada por el usuario
+
+      let [msgConfirmacion, setMsgConfirmacion] = useState('Confirmar horarios'); // Para mostrar los ejercicios de la rutina seleccionada por el usuario
+
+      const [usuarios, setUsuarios] = useState({}); // Estado inicial vacío
+      const navigate = useNavigate();
+    
+      const {token, logout} = useContext(AuthContext);
+      const [IdUsuario, setIdUsuario] = useState(null);
+      const [UsuarioActual, setUsuarioActual] = useState(null);
+
+      const [plannerIdInfo, setPLannerIdInfo] = useState([]); // Información del planner seleccionado
+      const [idPLanner, setIdPlanner] = useState(null); // Id del planner seleccionado para hacer get a api
+
+      const [mostrarBotonPlanner, setMostrarBotonPlanner] = useState(false); // Para mostrar el botón de ver en planner
+      const [hacerPatch, setHacerPatch] = useState(false); // Para mostrar el botón de ver en planner
+
+
+    useEffect(() => {
+      const getUserId = async () => {
+        try {
+          if (token){
+          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/auth/currentUsuario/token`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+          setIdUsuario(response.data.idUsuario);
+        }
+        } catch (error) {
+          console.log(error);
         }
       };
   
-    let handleGenderChange = (newGender) => {
-      setGender(newGender);
-      setPhysicalState(null); // Reiniciar el estado físico cuando se cambie el género
-      setAttribute(null); // Reiniciar el atributo físico cuando se cambie el género
-      setMsjBoton('Buscar');
+      const getUser = async () => {
+        try {
+          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/usuarios/${IdUsuario}`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+            });
+          setUsuarioActual(response.data);
+          
 
+          console.log('getUser:', response.data);
+        } catch (error) {
+          alert(error);
+        }
+      };
+  
+      if (IdUsuario) {
+        getUser();
+        
+      } else {
+        getUserId();
+      }
+    }, [IdUsuario]);
+
+
+  useEffect(() => {
+    const getPlanner = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/planners/user/${IdUsuario}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        // Utiliza la respuesta directamente en lugar de almacenarla en un estado intermedio
+        const plannerId = response.data.planner.id;
+        setIdPlanner(plannerId);
+  
+        
+      } catch (error) {
+        console.error('Hubo un error:', error);
+      }
     };
   
-    let handlePhysicalStateChange = (newState, nombre) => {
-      setPhysicalState(newState);
-      setEstadoFisico(nombre);
-      setMsjBoton('Buscar');
+    if (IdUsuario) {
+      getPlanner();
+    }
+  }, [IdUsuario, token]);
 
-    };
 
-    let handleAttributeChange = (newAttribute) => {
-        setAttribute(newAttribute);
+      let imagenes = {
+        Masculino: {
+          default: hombre, // Imagen por defecto de hombre
+          states: [hombre1, hombre2, hombre3], // Opciones de estado físico para hombre
+        },
+        Femenino: {
+          default: mujer, // Imagen por defecto de mujer
+          states: [mujer1, mujer2, mujer3], // Opciones de estado físico para mujer
+        },
+
+      };
+
+      const atributo = ['Fuerza', 'Agilidad', 'Cardio', 'Flexibilidad'];
+      const objetivo = ['Bajar de peso', 'Ganancia de masa muscular','Definición' ];
+
+
+      let checkAllFieldsCompleted = () => {
+          if (gender && physicalState && attribute) {
+            setAllFieldsCompleted(true);
+          } else {
+            setAllFieldsCompleted(false);
+          }
+        };
+    
+      let handleGenderChange = (newGender) => {
+        setGender(newGender);
+        setPhysicalState(null); // Reiniciar el estado físico cuando se cambie el género
+        setAttribute(null); // Reiniciar el atributo físico cuando se cambie el género
+        setMsjBoton('Buscar');
+
+      };
+    
+      let handlePhysicalStateChange = (newState, nombre) => {
+        setPhysicalState(newState);
+        setEstadoFisico(nombre);
         setMsjBoton('Buscar');
 
       };
 
-    useEffect(() => {checkAllFieldsCompleted();}, [gender, physicalState, objetivo]);
+      let handleAttributeChange = (newAttribute) => {
+          setAttribute(newAttribute);
+          setMsjBoton('Buscar');
 
-    let handleCreateRutina = async (event) => {
+        };
 
-      const bodyParameters = {
-          genero: gender,
-          objetivo: estadoFisico_api,
-          atributo_fisico: attribute,
+      useEffect(() => {checkAllFieldsCompleted();}, [gender, physicalState, objetivo]);
+
+      let handleGetRutina = async () => {
+        try {
+          // 1. Obtener todas las rutinas disponibles
+          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/rutinas`);
+      
+          const todasLasRutinas = response.data;
+      
+          // 2. Filtrar las rutinas según el género, objetivo y atributo físico seleccionados por el usuario
+          const rutinasFiltradas = todasLasRutinas.filter((rutina) => {
+            return (
+              rutina.genero.toLowerCase() === gender.toLowerCase() &&
+              rutina.objetivo.toLowerCase() === estadoFisico_api.toLowerCase() &&
+              rutina.atributo_fisico.toLowerCase() === attribute.toLowerCase()
+            );
+          });
+      
+          if (rutinasFiltradas.length === 0) {
+            console.log('No hay rutinas disponibles con los criterios seleccionados.');
+            return;
+          }
+          setRutinasDisponibles(rutinasFiltradas);
+          setMostrarRutinas(true);
+      
+          // 4. Obtener el ID de la primera rutina filtrada
+          const idDeRutina = rutinasFiltradas[0].id;
+      
+          // 5. Establecer el ID de la rutina
+          setIdRutina(idDeRutina);
+      
+          // 6. Manejar los ejercicios después de que se haya actualizado el estado
+          await handleGetEjercicios(idDeRutina);
+
+        } catch (error) {
+          console.error('Error al obtener las rutinas disponibles:', error);
+        }
       };
 
-      console.log('bodyParameters:', bodyParameters);
+      let handleGetEjercicios = async (rutinaId) => {
+        try {
+          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/rutinas/${rutinaId}/ejercicios`);
+          const { ejercicios } = response.data;
+          setEjerciciosRutina(ejercicios);
+          setMostrarEjercicios(true)
+        } catch (error) {
+          console.error('Error al obtener los ejercicios de la rutina:', error);
+        }
 
+      };
 
-      const getRutinaUrl = `${url_api}/${gender}/${estadoFisico_api}/${attribute}`;
-
-      let getEjerciciosUrl = `${url_api}/${id_rutina}/ejercicios`;
-
-      let rutina_ejercicio = []
-
-      // Realizar la solicitud GET con Axios
-      axios.get(getRutinaUrl)
-      .then(response => {
-        console.log('Datos de rutinas:', response.data);
-        setRutinasDisponibles(response.data);
-        setMsjBoton('Ver ejercicios');
-        setMostrarRutinas(true);
-
-        // Acceder a cada rutina individual dentro del array
-        response.data.forEach(rutina => {
-
-          // Acceder a cada propiedad de la rutina
-          const nombreRutina = rutina.nombre_rutina;
-          const genero = rutina.genero;
-          const objetivo = rutina.objetivo;
-          const atributoFisico = rutina.atributo_fisico;
-          const dificultad = rutina.dificultad_rutina;
-          const id = rutina.id;
-          setRutinaId(id);
-          axios.get(`http://localhost:3000/rutinas/${id}/ejercicios`)
-          .then(response => {
-            console.log('Datos de ejercicios:', response.data);
-            const ejercicios = response.data.ejercicios;
-            console.log('ejercicios:', ejercicios[0].nombre_ejercicio) // Acceder al nombre del primer ejercicio
-            const rutinaCompleta = {
-              nombreRutina,
-              genero,
-              objetivo,
-              atributoFisico,
-              dificultad,
-              ejercicios,
-            };
-            console.log('rutinaCompleta:', ejercicios);
-            setEjerciciosRutina(ejercicios);
-            console.log('ejercicicosRutina:', ejercicicosRutina)
-            if (ejercicicosRutina.length > 0) {
-              setMostrarEjercicios(true);
-              console.log('mostrarEjercicios:', mostrarEjercicios)
-            }
-
-          })
-
-        });
-        console.log('rutina_ejercicio:', rutina_ejercicio);
-      })
-      .catch(error => {
-        console.error('Hubo un error:', error);
-      });
-
-    };
-
-    
-      
-  
-    return (
-        <div className='body-container'>
-        <div className='rutinas-container'>
-        <h2>Selecciona un género:</h2>
-        <div>
-          <Button onClick={() => handleGenderChange('Masculino')}label={'Masculino'} 
-          isSelected={gender === 'masculino'}/>
-
-          <Button onClick={() => handleGenderChange('Femenino')}label={'Femenino'}
-          isSelected={gender === 'femenino'}/>
-        </div>
-  
-        {gender && (//requerir haber clickeado algun género
-          <div>
-            <Image img src={imagenes[gender].default} alt={`Imagen por defecto de ${gender}`} />
-          </div>
-        )}
-  
-        {gender && (//requerir haber clickeado algun género
-          <div>
-            <h2>Selecciona tu objetivo:</h2>
-            {imagenes[gender].states.map((state, index) => (
-              <Button key={index} onClick={() => handlePhysicalStateChange(state, objetivo[index])} label ={objetivo[index]}
-              isSelected={physicalState === state}/>
-            ))}
-          </div>
+      let handleSetHorarios = async () => {
+        try {
+          // Crear un objeto para almacenar los horarios de la rutina seleccionada
+          const horarios = {};
           
-        )}
-        {gender && physicalState &&(
-            <div>
-                <h2>Imagen seleccionada:</h2>
-                {physicalState ? (
-                <div>
-                    <Image src={physicalState} alt="Imagen seleccionada" />
-                </div>
-                ) : ( //se usa para evaluar una condición. Si physicalstate es verdader, entonces renderiza y muetsra la img
-                <p>Selecciona un estado físico</p>
-            )}
-            </div>
-        
-        )}
+          // Iterar sobre los días y agregar los horarios y el estado del checkbox correspondientes
+          Object.keys(times).forEach((day) => {
+            horarios[day.toLowerCase()] = {
+              checked: times[day].checked,
+              time: times[day].checked ? parseInt(times[day].time.split(':')[0]) : null,
+            };
+          });
+      
+          // Mostrar los horarios en la consola (puedes eliminar esta línea en producción)
+          console.log('Horarios:', horarios, 'tipo:', typeof horarios);
 
-        {gender && physicalState && (
-        <div>
-            <h2>Selecciona un atributo físico:</h2>
-            {atributo.map((attr, index) => (
-            <Button key={index} onClick={() => handleAttributeChange(attr)}
-                label = {attr}
-                isSelected={attribute === attr}
-                value={attr}
-                onChange={(e) => setObjetivo(e.target.value)}
-                />
-            ))}
-            <div>
-            {attribute && (
-                <div>
-                {/* <p>{`Atributo físico seleccionado: ${attribute}`}</p>*/}
-                {attribute === 'Fuerza' && <Image src={strenght} alt="Fuerza" />}
-                {attribute === 'Agilidad' && <Image src={agility} alt="Agilidad" />}
-                {attribute === 'Cardio' && <Image src={cardio} alt="Cardio" />}
-                {attribute === 'Flexibilidad' && <Image src={flexibility} alt="Flexibilidad" />}
-                </div>
-            )}
-            </div>
-        </div>)}
-        
-        </div>
-        {allFieldsCompleted && <button className="guardar-button" onClick={handleCreateRutina}>{msjBoton}</button>}
-        
+          let dias_entrenamiento = [];
+          let dataBody = {};
 
-        {mostrarRutinas && (
-          <div className='rutinas-container'>
-            <h2>Rutinas disponibles:</h2>
-            {rutinasDisponibles.map((rutina, index) => (
-              <div key={index} className='rutinas-disponibles-container'>
-              
-                <p>{`Nombre: ${rutina.nombre_rutina}`}</p>
-                <p>{`Descripción: ${rutina.descripcion}`}</p>
-                <p>{`Género: ${rutina.genero}`}</p>
-                <p>{`Objetivo: ${rutina.objetivo}`}</p>
-                <p>{`Atributo físico: ${rutina.atributo_fisico}`}</p>
-                <p>{`Dificultad: ${rutina.dificultad_rutina}`}</p>
-                <NavLink to={`/planner`} className={'boton-a-planner'}>Ver en planner</NavLink>
-                
-              </div>
-            ))}
-          </div>
-        )}
+          for (const day in horarios) {
+            if (horarios.hasOwnProperty(day)) {
+              const horario = horarios[day];
+              console.log('horario.time:', horario.time, 'tipo:', typeof horario.time);
 
+              // Realiza las acciones que necesitas con cada día y sus horarios aquí
+              if (horario.checked && !horario.time) {
+                // si esta checkeado el dia pero no tiene hora
+                alert('Debes seleccionar una hora para los días que quieras entrenar');
+              }
 
-        
-        {mostrarRutinas && mostrarEjercicios && (
-          <div className='rutinas-container'>
-            <h2>Ejericios:</h2>
-            {ejercicicosRutina.map((rutina, index) => (
-              <div key={index} className='rutinas-disponibles-container'>
-              
-                <p>{`${rutina.nombre_ejercicio} | Dificultad: ${rutina.dificultad} | Grupo(s) muscular(es): ${rutina.grupo_muscular}`}</p>
-                
-                
-                
-                
-                
-              </div>
-            ))}
+              else if (horario.checked && horario.time) {
+                // si esta checkeado y tiene hora
+                dias_entrenamiento.push(day);  
+                setHacerPatch(true);              
+              }
 
+              else if (!horario.checked && !horario.time) {
+                // si no esta checkeado y no tiene hora
+              }
+
+              else if (!horario.checked && horario.time) {
+                // si no esta checkeado y tiene hora
+                // caso imposible
+                alert('Debes seleccionar una hora para los días que quieras entrenar');
+                console.log('Revisar caso imposible');
+              }
+            }
+          }
+
+          // if (dias_entrenamiento.length >= 1) {
+          //   // si tiene al menos un día
+          //   setHorariosCorrectos(true);
+          // }
             
 
+          if (dias_entrenamiento.length >= 1) {
+            // Si todos los horarios fueron ingresados correctamente...
+            console.log(`hay horarios: hacer patch a planner de:`, horarios);
+            // Realizar la solicitud PATCH con Axios
+
+            const data = {
+              horarios: horarios,
+              IdRutina: IdRutina,
+            }
+
+            const url = `${import.meta.env.VITE_BACKEND_URL}/planners/times/${idPLanner}`;
+            axios.patch(url, data, {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
+            })
+            .then((response) => {
+              // Manejar la respuesta exitosa
+              setMostrarBotonPlanner(true);
+              console.log('Planner actualizado exitosamente:', response.data);
+              
+            })
+            .catch((error) => {
+              // Manejar errores
+              console.error('Error al actualizar el planner:', error);
+              });
+
+            setHorariosCorrectos(false);
+            return;
+          }
+                
+        } catch (error) {
+          console.error('Error al establecer los horarios de la rutina:', error);
+        }
+      };
+
+
+    
+
+      const [times, setTimes] = useState({
+        Lunes: { checked: false, time: '12:00' },
+        Martes: { checked: false, time: '12:00' },
+        Miercoles: { checked: false, time: '12:00' },
+        Jueves: { checked: false, time: '12:00' },
+        Viernes: { checked: false, time: '12:00' },
+        Sabado: { checked: false, time: '12:00' },
+        Domingo: { checked: false, time: '12:00' },
+      });
+    
+      const handleCheckboxChange = (day) => {
+        setTimes((prevTimes) => {
+          const updatedTimes = { ...prevTimes };
+          updatedTimes[day].checked = !updatedTimes[day].checked;
+    
+          // If the checkbox is checked, set the time to null
+          if (updatedTimes[day].checked) {
+            updatedTimes[day].time = null;
+          }
+    
+          return updatedTimes;
+        });
+      };
+    
+      const handleTimeChange = (day, value) => {
+        setTimes((prevTimes) => {
+          const updatedTimes = { ...prevTimes };
+          updatedTimes[day].time = value;
+          return updatedTimes;
+        });
+      };
+    
+
+
+      return (
+          <div className='body-container'>
+          <div className='rutinas-container'>
+          <h2>Selecciona un género:</h2>
+          <div>
+            <Button onClick={() => handleGenderChange('Masculino')}label={'Masculino'} 
+            isSelected={gender === 'masculino'}/>
+
+            <Button onClick={() => handleGenderChange('Femenino')}label={'Femenino'}
+            isSelected={gender === 'femenino'}/>
+          </div>
+    
+          {gender && (//requerir haber clickeado algun género
+            <div>
+              <Image img src={imagenes[gender].default} alt={`Imagen por defecto de ${gender}`} />
+            </div>
+          )}
+    
+          {gender && (//requerir haber clickeado algun género
+            <div>
+              <h2>Selecciona tu objetivo:</h2>
+              {imagenes[gender].states.map((state, index) => (
+                <Button key={index} onClick={() => handlePhysicalStateChange(state, objetivo[index])} label ={objetivo[index]}
+                isSelected={physicalState === state}/>
+              ))}
+            </div>
+            
+          )}
+          {gender && physicalState &&(
+              <div>
+                  <h2>Imagen seleccionada:</h2>
+                  {physicalState ? (
+                  <div>
+                      <Image src={physicalState} alt="Imagen seleccionada" />
+                  </div>
+                  ) : ( //se usa para evaluar una condición. Si physicalstate es verdader, entonces renderiza y muetsra la img
+                  <p>Selecciona un estado físico</p>
+              )}
+              </div>
+          
+          )}
+
+          {gender && physicalState && (
+          <div>
+              <h2>Selecciona un atributo físico:</h2>
+              {atributo.map((attr, index) => (
+              <Button key={index} onClick={() => handleAttributeChange(attr)}
+                  label = {attr}
+                  isSelected={attribute === attr}
+                  value={attr}
+                  onChange={(e) => setObjetivo(e.target.value)}
+                  />
+              ))}
+              <div>
+              {attribute && (
+                  <div>
+                  {/* <p>{`Atributo físico seleccionado: ${attribute}`}</p>*/}
+                  {attribute === 'Fuerza' && <Image src={strenght} alt="Fuerza" />}
+                  {attribute === 'Agilidad' && <Image src={agility} alt="Agilidad" />}
+                  {attribute === 'Cardio' && <Image src={cardio} alt="Cardio" />}
+                  {attribute === 'Flexibilidad' && <Image src={flexibility} alt="Flexibilidad" />}
+                  </div>
+              )}
+              </div>
+          </div>)}
+          
+          </div>
+          {allFieldsCompleted && <button className="guardar-button" onClick={handleGetRutina}>{msjBoton}</button>}
+          
+
+          {mostrarRutinas && (
+            <div className='rutinas-container'>
+              <h2>Rutinas disponibles:</h2>
+              {rutinasDisponibles.map((rutina, index) => (
+                <div key={index} className='rutinas-disponibles-container'>
+                
+                  <p>{`Nombre: ${rutina.nombre_rutina}`}</p>
+                  <p>{`Descripción: ${rutina.descripcion}`}</p>
+                  <p>{`Género: ${rutina.genero}`}</p>
+                  <p>{`Objetivo: ${rutina.objetivo}`}</p>
+                  <p>{`Atributo físico: ${rutina.atributo_fisico}`}</p>
+                  <p>{`Dificultad: ${rutina.dificultad_rutina}`}</p>
+                  {/* <NavLink to={`/planner`} className={'boton-a-planner'}>Ver en planner</NavLink> */}
+                  
+                </div>
+              ))}
+            </div>
+          )}
 
 
           
-          </div>
-        )}
+          {mostrarRutinas && mostrarEjercicios && (
+            <div className='rutinas-container'>
+              <h2>Ejericios:</h2>
+              {ejerciciosRutina.map((rutina, index) => (
+                <div key={index} className='rutinas-disponibles-container'>
+                  <p>{`${rutina.nombre_ejercicio} | Dificultad: ${rutina.dificultad} | Grupo(s) muscular(es): ${rutina.grupo_muscular} | Descripción: ${rutina.descripcion}`}</p>   
+                </div>
+              ))}
+          
+            </div>
+            
+          )}
 
-        
 
-    </div>
+          {mostrarRutinas && mostrarEjercicios && (
+            <div className='rutinas-container'>
+              <h2>Horarios:</h2>
 
-        
+              <table className='tabla-horarios-rutina' border="1">
+                    <thead>
+                      <tr>
+                        <th>Día</th>
+                        <th>Entreno (Si/No)</th>
+                        <th>Hora</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {Object.keys(times).map((day) => (
+                        <tr key={day} className={times[day].checked ? 'row-checked' : ''}>
+                          <td>{day}</td>
+                          <td>
+                            <input
+                              type="checkbox"
+                              checked={times[day].checked}
+                              onChange={() => handleCheckboxChange(day)}
+                            />
+                          </td>
+                          <td className='time-picker-rutina'>
+                            {times[day].checked && (
+                              <TimePicker
+                                onChange={(value) => handleTimeChange(day, value)}
+                                value={times[day].time}
+                                clockIcon={null}
+                              />
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
 
-        
 
-    );
-            }
-  
-  export default Images;
+
+              <button className="horarios-button" onClick={handleSetHorarios}>Confirmar horarios y rutina</button>
+              
+
+          
+            </div>
+            
+          )}
+
+
+          {mostrarRutinas && mostrarEjercicios && mostrarBotonPlanner && (
+            <div className='rutinas-container'>
+              
+              <NavLink to={`/planner`} className={'boton-a-planner'}>Ver en planner</NavLink>
+
+            </div>
+            
+          )}
+
+      </div>
+    
+
+      );
+              }
+    
+    export default Images;
