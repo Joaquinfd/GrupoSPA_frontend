@@ -14,7 +14,7 @@ function Perfil() {
     const [usuarios, setUsuarios] = useState({}); // Estado inicial vacío
     const navigate = useNavigate();
     
-    const {token, logout} = useContext(AuthContext);
+    const {token, logout, setScope} = useContext(AuthContext);
     const [IdUsuario, setIdUsuario] = useState(null);
     const [UsuarioActual, setUsuarioActual] = useState(null);
 
@@ -29,6 +29,9 @@ function Perfil() {
             }
           });
           setIdUsuario(response.data.idUsuario);
+          setScope(response.data.scope);
+          localStorage.setItem("scope", response.data.scope);
+          
         }
         } catch (error) {
           console.log(error);
@@ -42,8 +45,7 @@ function Perfil() {
               Authorization: `Bearer ${token}`
             }
             });
-          setUsuarioActual(response.data);
-          
+          setUsuarioActual(response.data);   
 
           console.log(response.data);
         } catch (error) {

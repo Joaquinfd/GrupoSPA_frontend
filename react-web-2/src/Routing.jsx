@@ -7,6 +7,7 @@ import Perfil from './pages/perfil';
 import Images from './pages/crear-rutina';
 import Planner from './pages/planner';
 import Notificaciones from './pages/notificaciones';
+import Ejercicios from './pages/agregarEjercicios';
 
 
 function Routing(){
@@ -20,7 +21,8 @@ function Routing(){
                 <Route path={"/mi-perfil"} element={<Perfil/>}/>
                 <Route path={"/planner"} element={<Planner/>}/>
                 <Route path={"/crear-rutina"} element={<Images/>}/>
-                <Route path={"/notificaciones"} element={<Notificaciones/>}/>   
+                <Route path={"/notificaciones"} element={<Notificaciones/>}/>
+                <Route path={"/admin"} element={<Ejercicios/>}/>  
             </Routes>
         </BrowserRouter>
     )

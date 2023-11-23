@@ -25,7 +25,7 @@ yarn add react-big-calendar
 yarn add react-router-dom
 yarn add react-moment
 yarn add react-responsive-carousel
-
+yarn add @mui/material @emotion/react @emotion/styled
 
 
 Importante recalcar que esto se ejecuta en la ubciación de la terminal `grupo_GrupoSPA_frontend/react-web-2`, y de querer agragr otra librería se utiliza ` yarn add LIBRERIA`. Aunque puede que no se necesite la instalación de cada una de ellas, se recomienda hacer para evitar errores.
