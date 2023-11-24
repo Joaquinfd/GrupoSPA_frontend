@@ -1,29 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import './home.css'
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import axios from 'axios';  
-
+import { AuthContext } from '../auth/authContext';
 export default function Home() {
-
-
-    
-    // axios.get('http://localhost:3000/usuarios/list')
-    // .then(response => {
-    //     // Procesar los datos recibidos desde el backend
-    //     console.log(response.data);
-    // })
-    // .catch(error => {
-    //     // Manejar errores de la solicitud
-    //     console.error(error);
-    // });
-
-    // axios.post('http://localhost:3000/characters/create', {
-    //     name: 'Jesse',
-    //     description: 'Mechanic',
-    //     image: 'https://vignette.wikia.nocookie.net/breakingbad/images/0/0e/JesseS5.jpg/revision/latest?cb=20120620014053'
-    // })
+    const {token} = useContext(AuthContext);
 
 
     const images = [
@@ -63,12 +46,13 @@ export default function Home() {
                         ))}
                         {/* src: https://cloudinary.com/blog/add-a-responsive-image-carousel-to-your-react-app */}
                     </Carousel>
-                    <Link to="/ingreso">
-                        <button className='boton-registro' id='home-button-br'>
-                            <h2>Empieza ahora!</h2>
-                        </button>
-                    </Link>
-                    
+                    {token ? null : (
+                        <Link to="/ingreso">
+                            <button className='boton-registro' id='home-button-br'>
+                                <h2>Empieza ahora!</h2>
+                            </button>
+                        </Link>
+                    )}
                 </div>
             </div>
         </div>

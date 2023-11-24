@@ -1,36 +1,31 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {
-  TextField,
-  Button,
   Typography,
   Container,
-  MenuItem,
+  Button,
+  TextField,
   FormControl,
   InputLabel,
   Select,
+  MenuItem,
 } from '@mui/material';
 import './agregarEjercicios.css';
 
-function CrearEjercicios() {
+function ActualizarEjercicio() {
   const navigate = useNavigate();
+  const [ejercicioIdToUpdate, setEjercicioIdToUpdate] = useState('');
   const [nombre, setNombre] = useState('');
   const [dificultad, setDificultad] = useState('');
   const [grupoMuscular, setGrupoMuscular] = useState('');
-  const [idRutina, setIdRutina] = useState(1);
+  const [idRutina, setIdRutina] = useState('');
   const [descripcion, setDescripcion] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-  const [newExercise, setNewExercise] = useState(null);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [updateMessage, setUpdateMessage] = useState(null);
 
-  const handleCreateEjercicio = async () => {
-    if (!nombre || !dificultad || !grupoMuscular || !idRutina || !descripcion) {
-      setErrorMessage('Por favor, complete todos los campos.');
-      return;
-    }
+  const handleUpdateEjercicio = async () => {
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/ejercicios`, {
+      const response = await axios.patch(`${import.meta.env.VITE_BACKEND_URL}/ejercicios/${ejercicioIdToUpdate}`, {
         nombre_ejercicio: nombre,
         dificultad,
         grupo_muscular: grupoMuscular,
@@ -38,35 +33,36 @@ function CrearEjercicios() {
         descripcion,
       });
 
-
-      console.log('Ejercicio creado:', response.data);
-      setNewExercise(response.data); // Guarda el nuevo ejercicio
-      setSuccessMessage('Ejercicio creado exitosamente');
-      setErrorMessage('');
+      console.log('Ejercicio actualizado:', response.data);
+      setUpdateMessage({ type: 'success', text: 'Ejercicio actualizado exitosamente' });
     } catch (error) {
-      console.error('Error al crear el ejercicio:', error);
-      setSuccessMessage(''); // Limpiar el mensaje de éxito si hay un error
-      setErrorMessage('Error al crear el ejercicio');
+      console.error('Error al actualizar el ejercicio:', error);
+      setUpdateMessage({ type: 'error', text: 'Error al actualizar el ejercicio' });
     }
   };
 
   return (
     <Container maxWidth="sm" className="ejercicios-container">
       <Typography variant="h4" component="h2" gutterBottom>
-        Crear Nuevo Ejercicio
+        Actualizar Ejercicio
       </Typography>
-      {successMessage && <Typography color="success">{successMessage}</Typography>}
-      {errorMessage && <Typography color="error">{errorMessage}</Typography>}
-
-      {newExercise && (
-        <div>
-          <Typography variant="h6">Ejercicio Creado:</Typography>
-          <pre>{JSON.stringify(newExercise, null, 2)}</pre>
-        </div>
+      {updateMessage && (
+        <Typography color={updateMessage.type === 'success' ? 'success' : 'error'}>
+          {updateMessage.text}
+        </Typography>
       )}
       <form>
         <TextField
-          label="Nombre del ejercicio"
+          label="ID del ejercicio a actualizar"
+          variant="outlined"
+          fullWidth
+          margin="normal"
+          type="number"
+          value={ejercicioIdToUpdate}
+          onChange={(e) => setEjercicioIdToUpdate(e.target.value)}
+        />
+        <TextField
+          label="Nuevo nombre del ejercicio"
           variant="outlined"
           fullWidth
           margin="normal"
@@ -74,7 +70,7 @@ function CrearEjercicios() {
           onChange={(e) => setNombre(e.target.value)}
         />
         <FormControl fullWidth margin="normal">
-          <InputLabel>Dificultad</InputLabel>
+          <InputLabel>Nueva Dificultad</InputLabel>
           <Select
             value={dificultad}
             onChange={(e) => setDificultad(e.target.value)}
@@ -86,7 +82,7 @@ function CrearEjercicios() {
           </Select>
         </FormControl>
         <TextField
-          label="Grupo Muscular"
+          label="Nuevo Grupo Muscular"
           variant="outlined"
           fullWidth
           margin="normal"
@@ -94,7 +90,7 @@ function CrearEjercicios() {
           onChange={(e) => setGrupoMuscular(e.target.value)}
         />
         <TextField
-          label="ID de la Rutina"
+          label="Nuevo ID de la Rutina"
           variant="outlined"
           fullWidth
           margin="normal"
@@ -103,7 +99,7 @@ function CrearEjercicios() {
           onChange={(e) => setIdRutina(e.target.value)}
         />
         <TextField
-          label="Descripción del ejercicio"
+          label="Nueva Descripción del ejercicio"
           variant="outlined"
           fullWidth
           multiline
@@ -113,12 +109,12 @@ function CrearEjercicios() {
           onChange={(e) => setDescripcion(e.target.value)}
         />
         <Button
-          className="crear-ejercicio-btn"
+          className="actualizar-ejercicio-btn"
           variant="contained"
           color="primary"
-          onClick={handleCreateEjercicio}
+          onClick={handleUpdateEjercicio}
         >
-          Crear Ejercicio
+          Actualizar Ejercicio
         </Button>
       </form>
       <Button
@@ -134,4 +130,4 @@ function CrearEjercicios() {
   );
 }
 
-export default CrearEjercicios;
+export default ActualizarEjercicio;

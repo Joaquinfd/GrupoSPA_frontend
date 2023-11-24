@@ -7,8 +7,11 @@ import Perfil from './pages/perfil';
 import Images from './pages/crear-rutina';
 import Planner from './pages/planner';
 import Notificaciones from './pages/notificaciones';
-import Ejercicios from './pages/agregarEjercicios';
-
+import CrearEjercicios from './pages/agregarEjercicios';
+import EliminarEjercicios from './pages/eliminarEjercicios';
+import ActualizarEjercicios from './pages/actualizarEjercicios';
+import ObtenerEjercicios from './pages/obtenerEjercicios';
+import Admin from './pages/admin';
 
 function Routing(){
     return (
@@ -22,7 +25,12 @@ function Routing(){
                 <Route path={"/planner"} element={<Planner/>}/>
                 <Route path={"/crear-rutina"} element={<Images/>}/>
                 <Route path={"/notificaciones"} element={<Notificaciones/>}/>
-                <Route path={"/admin"} element={<Ejercicios/>}/>  
+                <Route path={"/crearEjercicios"} element={<CrearEjercicios/>}/>
+                <Route path={"/eliminarEjercicios"} element={<EliminarEjercicios/>}/>
+                <Route path={"/actualizarEjercicios"} element={<ActualizarEjercicios/>}/>
+                <Route path={"/obtenerEjercicios"} element={<ObtenerEjercicios/>}/>
+                <Route path={"/admin"} element={<Admin/>}/>
+
             </Routes>
         </BrowserRouter>
     )
