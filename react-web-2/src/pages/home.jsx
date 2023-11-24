@@ -7,6 +7,8 @@ import axios from 'axios';
 
 export default function Home() {
 
+    
+
 
     
     // axios.get('http://localhost:3000/usuarios/list')

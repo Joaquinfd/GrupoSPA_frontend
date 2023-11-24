@@ -1,11 +1,40 @@
-import {React, useContext} from 'react';
+import {React, useContext, useEffect, useState} from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import logo from '../../public/images/logo_inicio.png';
 import { AuthContext } from '../auth/authContext';
+import io from 'socket.io-client';
+
+const socket = io('http://localhost:3001')
 
 
 function Navbar() {
+
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [showNotifications, setShowNotifications] = useState(false);
+
+  useEffect(() => {
+    // Configuración de los listeners de Socket.io
+
+    // Listener para el evento 'nuevaNotificacion'
+    socket.on('nuevaNotificacion', (data) => {
+      // Aquí puedes actualizar el estado o realizar acciones según la nueva notificación
+      console.log('Nueva notificacion recibida:', data)
+      setNotifications((prevNotifications) => [...prevNotifications, data]);
+      setUnreadCount((prevCount) => prevCount + 1);
+    });
+
+    // Importante: Desconectar el socket cuando el componente se desmonta
+    return () => {
+      // Desconectar el socket pasado 10 segundos
+      setTimeout(() => {
+        socket.disconnect();
+      }, 5000);
+      // socket.disconnect();
+    };
+  }, []); // El [] asegura que el efecto se ejecute solo una vez al montar el componente
+
   const { token, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -43,6 +72,11 @@ function Navbar() {
     }
   };
 
+  const handleToggleNotifications = () => {
+    setShowNotifications((prev) => !prev);
+    setUnreadCount(0);
+  };
+
   return (
     <header>
       <nav className="navbar">
@@ -50,6 +84,21 @@ function Navbar() {
         <NavLink exact="true" to="/" activeclassname="active">
         <img src={logo} alt="Logo" className="logo" />
         </NavLink>
+        </div>
+        <div className="notification-container">
+          <span className="notification-icon" onClick={handleToggleNotifications}>
+            📣
+            {unreadCount > 0 && <span className="unread-count">{unreadCount}</span>}
+          </span>
+          {showNotifications && (
+            <div className="notification-list">
+              {notifications.map((notification, index) => (
+                <div key={index} className="notification-item">
+                  {notification.content}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
         <ul>
         <li className="dropdown">
