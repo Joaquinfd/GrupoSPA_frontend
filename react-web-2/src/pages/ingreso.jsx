@@ -49,6 +49,8 @@ function Ingreso() {
             setToken(access_token); 
             console.log(access_token);
             navigate('/mi-perfil');
+
+            
             
         }
         catch(error){

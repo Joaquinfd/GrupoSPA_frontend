@@ -6,7 +6,7 @@ import { AuthContext } from '../auth/authContext';
 
 
 function Navbar() {
-  const { token, logout } = useContext(AuthContext);
+  const { token, logout, scope } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -43,6 +43,8 @@ function Navbar() {
     }
   };
 
+  const isAdmin = scope
+
   return (
     <header>
       <nav className="navbar">
@@ -64,6 +66,11 @@ function Navbar() {
               <NavLink to="/crear-rutina" activeclassname="active" onClick={handleCrearRutina}>
                 Crear Rutina
               </NavLink>
+               {isAdmin == "admin" && (
+                <NavLink to="/admin" activeclassname="active">
+                  Admin
+                </NavLink>
+              )} 
             </div>
           </li>          
           <li>
