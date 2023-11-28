@@ -18,6 +18,15 @@ function Perfil() {
     const [IdUsuario, setIdUsuario] = useState(null);
     const [UsuarioActual, setUsuarioActual] = useState(null);
 
+    const [editandoNombre, setEditandoNombre] = useState(false);
+    const [nuevoNombre, setNuevoNombre] = useState('');
+    const [editandoEdad, setEditandoEdad] = useState(false);
+    const [nuevaEdad, setNuevaEdad] = useState('');
+    const [editandoSexo, setEditandoSexo] = useState(false);
+    const [nuevoSexo, setNuevoSexo] = useState('');
+    const [editandoPeso, setEditandoPeso] = useState(false);
+    const [nuevoPeso, setNuevoPeso] = useState('');
+    const [cambios, setCambios] = useState({});
 
     useEffect(() => {
       const getUserId = async () => {
@@ -102,6 +111,104 @@ function Perfil() {
       }
 
     }
+
+    // nuevas
+
+    const habilitarEdicionNombre = () => {
+      setEditandoNombre(true);
+      setNuevoNombre(UsuarioActual.nombre_usuario);
+    };
+  
+    const handleCambioNombre = (e) => {
+      setNuevoNombre(e.target.value);
+      setCambios((prevCambios) => ({ ...prevCambios, nombre_usuario: true }));
+    };
+  
+    const habilitarEdicionEdad = () => {
+      setEditandoEdad(true);
+      setNuevaEdad(UsuarioActual.edad);
+    };
+  
+    const handleCambioEdad = (e) => {
+      setNuevaEdad(e.target.value);
+      setCambios((prevCambios) => ({ ...prevCambios, edad: true }));
+    };
+  
+    const habilitarEdicionSexo = () => {
+      setEditandoSexo(true);
+      setNuevoSexo(UsuarioActual.genero);
+    };
+  
+    const handleCambioSexo = (e) => {
+      setNuevoSexo(e.target.value);
+      setCambios((prevCambios) => ({ ...prevCambios, genero: true }));
+    };
+  
+    const habilitarEdicionPeso = () => {
+      setEditandoPeso(true);
+      setNuevoPeso(UsuarioActual.peso);
+    };
+  
+    const handleCambioPeso = (e) => {
+      setNuevoPeso(e.target.value);
+      setCambios((prevCambios) => ({ ...prevCambios, peso: true }));
+    };
+  
+    const confirmarCambios = async () => {
+      const cambiosEnviados = {};
+  
+      if (cambios.nombre_usuario) {
+        cambiosEnviados.nombre_usuario = nuevoNombre;
+      }
+  
+      if (cambios.edad) {
+        cambiosEnviados.edad = nuevaEdad;
+      }
+  
+      if (cambios.genero) {
+        cambiosEnviados.genero = nuevoSexo;
+      }
+  
+      if (cambios.peso) {
+        cambiosEnviados.peso = nuevoPeso;
+      }
+  
+      await modifyUsuario(cambiosEnviados);
+  
+      setUsuarioActual((prevUsuario) => ({
+        ...prevUsuario,
+        ...cambiosEnviados,
+      }));
+  
+      setEditandoNombre(false);
+      setEditandoEdad(false);
+      setEditandoSexo(false);
+      setEditandoPeso(false);
+      setCambios({});
+    };
+  
+    const modifyUsuario = async (cambios) => {
+      const bodyData = {
+        nombre_usuario: cambios.nombre_usuario || UsuarioActual.nombre_usuario,
+        edad: cambios.edad || UsuarioActual.edad,
+        genero: cambios.genero || UsuarioActual.genero,
+        peso: cambios.peso || UsuarioActual.peso,
+      };
+  
+      const url = `${import.meta.env.VITE_BACKEND_URL}/usuarios/${IdUsuario}`;
+  
+      try {
+        const usuario_modificado = await axios.patch(url, bodyData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log(usuario_modificado);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  
     return (
         <>
         <div className='perfil-container'>
@@ -112,24 +219,70 @@ function Perfil() {
 
             {UsuarioActual ? (
           <div className='Datos-de-perfil'>
-            <h2>Nombre:</h2>
-            <p>{UsuarioActual.nombre_usuario}</p>
+            <div>
+              <h2>Nombre:</h2>
+              {editandoNombre ? (
+                <>
+                  <input type="text" value={nuevoNombre} onChange={handleCambioNombre} />
+                  <a className='boton-cambio-atributo' onClick={confirmarCambios}>Confirmar</a>
+                </>
+              ) : (
+                <>
+                  <p>{UsuarioActual.nombre_usuario}</p>
+                  <a className='boton-cambio-atributo' onClick={habilitarEdicionNombre}>Editar</a>
+                </>
+              )}
+            </div>
             <h2>Edad</h2>
-            <p>{UsuarioActual.edad}</p>
+            {editandoEdad ? (
+              <>
+                <input type="text" value={nuevaEdad} onChange={handleCambioEdad} />
+                <a className='boton-cambio-atributo' onClick={confirmarCambios}>Confirmar</a>
+              </>
+            ) : (
+              <>
+                <p>{UsuarioActual.edad}</p>
+                <a className='boton-cambio-atributo' onClick={habilitarEdicionEdad}>Editar</a>
+              </>
+            )}
             <h2>Sexo</h2>
-            <p>{UsuarioActual.genero}</p>
+            {editandoSexo ? (
+              <>
+                <select type="text" value={nuevoSexo} onChange={handleCambioSexo}>
+                  <option value="Masculino">Masculino</option>
+                  <option value="Femenino">Femenino</option>
+                  </select> 
+                <a className='boton-cambio-atributo' onClick={confirmarCambios}>Confirmar</a>
+              </>
+            ) : (
+              <>
+                <p>{UsuarioActual.genero}</p>
+                <a className='boton-cambio-atributo' onClick={habilitarEdicionSexo}>Editar</a>
+              </>
+            )}
             <h2>Peso</h2>
-            <p>{UsuarioActual.peso}</p>
+            {editandoPeso ? (
+              <>
+                <input type="text" value={nuevoPeso} onChange={handleCambioPeso} />
+                <a className='boton-cambio-atributo' onClick={confirmarCambios}>Confirmar</a>
+              </>
+            ) : (
+              <>
+                <p>{UsuarioActual.peso}</p>
+                <a className='boton-cambio-atributo' onClick={habilitarEdicionPeso}>Editar</a>
+              </>
+            )}
+            {/* <p>{UsuarioActual.peso}</p> */}
             <h2>Objetivo</h2>
             <p>{UsuarioActual.objetivo}</p>
           </div>
         ) : (
           <div className='Datos-de-perfil'>
-          <h2>Nombre</h2>
-          <h2>Edad</h2>
-          <h2>Sexo</h2>
-          <h2>Peso</h2>
-          <h2>Objetivo</h2>
+            <h2>Nombre</h2>
+            <h2>Edad</h2>
+            <h2>Sexo</h2>
+            <h2>Peso</h2>
+            <h2>Objetivo</h2>
           </div>
         )}
 
@@ -163,11 +316,7 @@ function Perfil() {
         </div>
 
 
-       {/*<div className='Disclaimer'>
-       <p>- Solo si esta ingresado se podra ver. Tendrá la configuración elegida en el inicio por la persona, y tendrá la opción de editar los planes.</p>
-
-      <p>- Se podrá ajustar acá el uso de notificaciones.</p>
-          </div>*/}
+       
         </>
     );  
 }

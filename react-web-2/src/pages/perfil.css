@@ -175,3 +175,20 @@ div.division-oculta{
     color: red;
     border-color: #fff;
   }
+
+.container-modificar {
+    background-color: #ff0000;
+    display: flex;
+    flex-direction: row;
+}
+
+.botones-modificar {
+  background-color: #fff;
+}
+
+.boton-cambio-atributo {
+  background-color: transparent;
+  color: grey;
+  text-decoration: underline;
+  font-size: small;
+}

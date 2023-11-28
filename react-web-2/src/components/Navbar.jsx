@@ -1,13 +1,73 @@
-import {React, useContext} from 'react';
+import {React, useContext, useState, useEffect} from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import logo from '../../public/images/logo_inicio.png';
 import { AuthContext } from '../auth/authContext';
+import axios from 'axios';
+
 
 
 function Navbar() {
   const { token, logout, scope } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  const [notifications, setNotifications] = useState([]);
+  const [notificacionMostrar, setNotificacionMostrar] = useState(null);
+  const [notificacionesMostradas, setNotificacionesMostradas] = useState([]);
+
+  useEffect(() => {
+    const obtenerYCrearNotificaciones = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/notificaciones');
+        setNotifications(response.data);
+        console.log('notificaciones obtenidas:', response.data.length);
+        const fecha = new Date();
+        const diaSemana = fecha.getDay();
+  
+        notifications.forEach((notificacion) => {
+        
+          if (
+            !notificacionesMostradas.includes(notificacion.id) &&
+            notificacionMostrar === null &&
+            notificacion.tipo &&
+            notificacion.contenido
+          ) {
+            const diaNotificacion = notificacion.tipo.toLowerCase();
+            const horaNotificacion = parseInt(notificacion.contenido);
+  
+            if (
+              diaSemana === (['domingo', 'lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado'].indexOf(diaNotificacion)) &&
+              fecha.getHours() === horaNotificacion
+            ) {
+              // Marcar la notificación como mostrada
+              setNotificacionesMostradas((prevNotificacionesMostradas) => [
+                ...prevNotificacionesMostradas,
+                notificacion.id,
+              ]);
+              // Mostrar notificación (o realizar la acción que desees)
+              setNotificacionMostrar(notificacion);
+            }
+          }
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    const intervalId = setInterval(obtenerYCrearNotificaciones, 5000);
+
+    return () => clearInterval(intervalId);
+  }, [notifications, notificacionesMostradas, notificacionMostrar]);
+  
+
+  useEffect(() => {
+    // Aquí puedes agregar la lógica para mostrar tu notificación (puedes reemplazar la alerta)
+    if (notificacionMostrar) {
+      alert('Notificación: ' + notificacionMostrar.contenido);
+      // Limpiar el estado de notificacionMostrar después de mostrar la alerta
+      setNotificacionMostrar(null);
+    }
+  }, [notificacionMostrar]);
 
   const handleLogout = () => {
     logout() ;
