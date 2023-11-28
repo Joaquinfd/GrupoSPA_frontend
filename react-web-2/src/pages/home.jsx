@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import axios from 'axios';  
 import { AuthContext } from '../auth/authContext';
 export default function Home() {
+
     const {token} = useContext(AuthContext);
 
 
