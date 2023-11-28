@@ -5,6 +5,7 @@ import axios from 'axios';
 import { AuthContext } from '../auth/authContext';
 
 function Perfil() {
+
   const [mostrarOpciones, setMostrarOpciones] = useState(false);
   const [mostrarDivision, setMostrarDivision] = useState(false);
   const [imagenSeleccionada, setImagenSeleccionada] = useState(null);
@@ -12,9 +13,7 @@ function Perfil() {
   const [usuarios, setUsuarios] = useState({});
   const navigate = useNavigate();
 
-  const { token, logout } = useContext(AuthContext);
-  const [IdUsuario, setIdUsuario] = useState(null);
-  const [UsuarioActual, setUsuarioActual] = useState(null);
+
 
   const [editandoNombre, setEditandoNombre] = useState(false);
   const [nuevoNombre, setNuevoNombre] = useState('');
@@ -29,19 +28,55 @@ function Perfil() {
 
   const [cambios, setCambios] = useState({});
 
-  useEffect(() => {
-    const getUserId = async () => {
-      try {
-        if (token) {
+
+ 
+    
+    const {token, logout, setScope} = useContext(AuthContext);
+    const [IdUsuario, setIdUsuario] = useState(null);
+    const [UsuarioActual, setUsuarioActual] = useState(null);
+
+
+    useEffect(() => {
+      const getUserId = async () => {
+        try {
+          if (token){
+
           const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/auth/currentUsuario/token`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
           });
           setIdUsuario(response.data.idUsuario);
+          setScope(response.data.scope);
+          localStorage.setItem("scope", response.data.scope);
+          
         }
-      } catch (error) {
-        console.log(error);
+
+        } catch (error) {
+          console.log(error);
+        }
+      };
+  
+      const getUser = async () => {
+        try {
+          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/usuarios/${IdUsuario}`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+            });
+          setUsuarioActual(response.data);   
+
+          console.log(response.data);
+        } catch (error) {
+          alert(error);
+        }
+      };
+  
+      if (IdUsuario) {
+        getUser();
+      } else {
+        getUserId();
+
       }
     };
 

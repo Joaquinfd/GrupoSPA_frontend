@@ -13,72 +13,7 @@ import { set } from 'date-fns';
 
 function Navbar() {
 
-//   const [notifications, setNotifications] = useState([]);
-//   const [unreadCount, setUnreadCount] = useState(0);
-//   const [showNotifications, setShowNotifications] = useState(false);
-//   const [notificacionMostrar, setNotificacionMostrar] = useState([]);
-//   const [notificacionesMostradas, setNotificacionesMostradas] = useState(false);
 
-//   const diasSemana = {
-//     'lunes': 1,
-//     'martes': 2,
-//     'miercoles': 3,
-//     'jueves': 4,
-//     'viernes': 5,
-//     'sabado': 6,
-//     'domingo': 0
-//   }
-
-//   useEffect(() => {
-
-//     const obtenerNotificaciones = async () => {
-//       try {
-//         const response = await axios.get('http://localhost:3000/notificaciones');
-//         setNotifications(response.data);
-//         console.log(response.data);
-//       } catch (error) {
-//         console.error(error);
-//       }
-//     };
-//     const intervalId = setInterval(obtenerNotificaciones, 10000);
-
-//     return () => clearInterval(intervalId);
-//   }, []);
-
-
-
-//   useEffect(() => {
-//     // mapear dias de la semana a numeros del 0 al 6
-    
-//     const fecha = new Date();
-//     const diaSemana = fecha.getDay();
-
-//     const crearNotificacion = async () => {
-//     notifications.forEach((notificacion) => {
-//       // revisar si el dia de semana corresponde al dia de semana actual
-//       if (diasSemana[notificacion.tipo] === diaSemana) {
-
-//         console.log('notificacion dia actual:', notificacion)
-//         const hora_actual = new Date().getHours();
-//         console.log('hora actual:', hora_actual)
-//         // mostrar notificacion si la hora actual es igual a la hora de la notificacion
-//         if (hora_actual === parseInt(notificacion.contenido) && !notificacionesMostradas) {
-//           // crear notificacion
-//           console.log('se creo notificacion')
-//           // mostrar notificacion
-//           setNotificacionMostrar([notificacion]);
-//           alert('Notificacion');
-//           setNotificacionesMostradas(true);
-//         }
-//       }
-  
-//     });
-//   };
-//   const intervalId = setInterval(crearNotificacion, 5000);
-
-//   return () => clearInterval(intervalId);
-
-// }, [notifications]);
   const [notifications, setNotifications] = useState([]);
   const [notificacionMostrar, setNotificacionMostrar] = useState(null);
   const [notificacionesMostradas, setNotificacionesMostradas] = useState([]);
@@ -138,32 +73,8 @@ function Navbar() {
   }, [notificacionMostrar]);
 
 
+  const { token, logout, scope } = useContext(AuthContext);
 
-
-
-  // useEffect(() => {
-  //   // Configuración de los listeners de Socket.io
-
-  //   // Listener para el evento 'nuevaNotificacion'
-  //   socket.on('nuevaNotificacion', (data) => {
-  //     // Aquí puedes actualizar el estado o realizar acciones según la nueva notificación
-  //     console.log('Nueva notificacion recibida:', data)
-  //     setNotifications((prevNotifications) => [...prevNotifications, data]);
-  //     setUnreadCount((prevCount) => prevCount + 1);
-  //     console.log('notificaciones sin leer:', unreadCount)
-  //   });
-
-  //   // Importante: Desconectar el socket cuando el componente se desmonta
-  //   return () => {
-  //     // Desconectar el socket pasado 10 segundos
-  //     setTimeout(() => {
-  //       socket.disconnect();
-  //     }, 5000);
-  //     // socket.disconnect();
-  //   };
-  // }, []); // El [] asegura que el efecto se ejecute solo una vez al montar el componente
-
-  const { token, logout } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -200,10 +111,14 @@ function Navbar() {
     }
   };
 
+
   const handleToggleNotifications = () => {
     setShowNotifications((prev) => !prev);
     setUnreadCount(0);
   };
+
+  const isAdmin = scope
+
 
   return (
     <header>
@@ -249,6 +164,11 @@ function Navbar() {
               <NavLink to="/crear-rutina" activeclassname="active" onClick={handleCrearRutina}>
                 Crear Rutina
               </NavLink>
+               {isAdmin == "admin" && (
+                <NavLink to="/admin" activeclassname="active">
+                  Admin
+                </NavLink>
+              )} 
             </div>
           </li>          
           <li>

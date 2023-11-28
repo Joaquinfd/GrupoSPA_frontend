@@ -219,7 +219,7 @@ import React, { useState, useEffect, useContext } from 'react';
       let handleGetEjercicios = async (rutinaId) => {
         try {
           const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/rutinas/${rutinaId}/ejercicios`);
-          const { ejercicios } = response.data;
+          let { ejercicios } = response.data;
           setEjerciciosRutina(ejercicios);
           setMostrarEjercicios(true)
         } catch (error) {

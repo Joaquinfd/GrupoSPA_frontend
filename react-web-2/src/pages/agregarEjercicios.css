@@ -1,0 +1,40 @@
+/* styles.css */
+
+.ejercicios-container {
+    background-color: #fff;
+    color: #000;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 50px;
+  }
+  
+  .crear-ejercicio-btn {
+    background-color: red;
+    color: #fff;
+    padding: 15px 20px;
+    size: 10px;
+    margin-top: 30px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+  }
+  
+  .volver-link {
+    background-color: red;
+    color: #fff;
+    padding: 15px 20px;
+    size: 10px;
+    margin-top: 30px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, box-shadow 0.3s;
+  }
+
+  .crear-ejercicio-btn:hover,
+  .volver-link:hover {
+    background-color: darkred !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+  }
+
