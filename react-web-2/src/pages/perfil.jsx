@@ -245,7 +245,7 @@ function Perfil() {
                 <a className='boton-cambio-atributo' onClick={habilitarEdicionEdad}>Editar</a>
               </>
             )}
-            <h2>Sexo</h2>
+            <h2>Género</h2>
             {editandoSexo ? (
               <>
                 <select type="text" value={nuevoSexo} onChange={handleCambioSexo}>
@@ -307,8 +307,7 @@ function Perfil() {
           {mostrarOpciones && (
             <div className='opciones'>
             <div><Link to='/notificaciones'>Notificaciones</Link></div>
-            <div><Link to='/crear-rutina'>Modificar Objetivos</Link></div>
-            <div><a href="#división-oculta" onClick={() => { mostrarOcultarDivision(); scrollToDivision(); }}>Ajustar Dificultad</a></div>
+            <div><Link to='/crear-rutina'>Modificar rutina</Link></div>
             <div><a href="#división-oculta" onClick={() => { deleteUsuario() }}>Eliminar cuenta</a></div>
             </div>
           )}

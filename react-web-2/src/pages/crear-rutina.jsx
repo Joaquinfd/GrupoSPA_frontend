@@ -90,7 +90,7 @@ import React, { useState, useEffect, useContext } from 'react';
             }
             });
           setUsuarioActual(response.data);
-          
+          setGender(response.data.genero)
 
           console.log('getUser:', response.data);
         } catch (error) {
@@ -104,7 +104,7 @@ import React, { useState, useEffect, useContext } from 'react';
       } else {
         getUserId();
       }
-    }, [IdUsuario]);
+    }, [IdUsuario],[UsuarioActual], [gender]);
 
 
   useEffect(() => {
@@ -131,13 +131,14 @@ import React, { useState, useEffect, useContext } from 'react';
     }
   }, [IdUsuario, token]);
 
+  
 
       let imagenes = {
-        Masculino: {
+        masculino: {
           default: hombre, // Imagen por defecto de hombre
           states: [hombre1, hombre2, hombre3], // Opciones de estado físico para hombre
         },
-        Femenino: {
+        femenino: {
           default: mujer, // Imagen por defecto de mujer
           states: [mujer1, mujer2, mujer3], // Opciones de estado físico para mujer
         },
@@ -149,15 +150,15 @@ import React, { useState, useEffect, useContext } from 'react';
 
 
       let checkAllFieldsCompleted = () => {
-          if (gender && physicalState && attribute) {
+          if (UsuarioActual && UsuarioActual.genero && physicalState && attribute) {
             setAllFieldsCompleted(true);
           } else {
             setAllFieldsCompleted(false);
           }
         };
     
-      let handleGenderChange = (newGender) => {
-        setGender(newGender);
+      let handleGenderChange = () => {
+        setGender();
         setPhysicalState(null); // Reiniciar el estado físico cuando se cambie el género
         setAttribute(null); // Reiniciar el atributo físico cuando se cambie el género
         setMsjBoton('Buscar');
@@ -281,7 +282,6 @@ import React, { useState, useEffect, useContext } from 'react';
           //   // si tiene al menos un día
           //   setHorariosCorrectos(true);
           // }
-            
 
           if (dias_entrenamiento.length >= 1) {
             // Si todos los horarios fueron ingresados correctamente...
@@ -319,9 +319,6 @@ import React, { useState, useEffect, useContext } from 'react';
         }
       };
 
-
-    
-
       const [times, setTimes] = useState({
         Lunes: { checked: false, time: '12:00' },
         Martes: { checked: false, time: '12:00' },
@@ -354,39 +351,33 @@ import React, { useState, useEffect, useContext } from 'react';
         });
       };
 
-     
-    
-
-
       return (
           <div className='body-container'>
           <div className='rutinas-container'>
-          <h2>Selecciona un género:</h2>
+          {/* <h2>Selecciona un género:</h2> */}
           <div>
-            <Button onClick={() => handleGenderChange('Masculino')}label={'Masculino'} 
-            isSelected={gender === 'masculino'}/>
+            {/* <Button onClick={() => handleGenderChange()}label={'Comenzar'}  */}
 
-            <Button onClick={() => handleGenderChange('Femenino')}label={'Femenino'}
-            isSelected={gender === 'femenino'}/>
+            {/* /> */}
+
+            {/* {console.log('RETURNNN usuarioActual', UsuarioActual)} */}
+
+            {/* gender = {UsuarioActual && UsuarioActual.genero} */}
+        
           </div>
     
-          {gender && (//requerir haber clickeado algun género
-            <div>
-              <Image img src={imagenes[gender].default} alt={`Imagen por defecto de ${gender}`} />
-            </div>
-          )}
-    
-          {gender && (//requerir haber clickeado algun género
+        
+          {UsuarioActual && UsuarioActual.genero && (//requerir haber clickeado algun género
             <div>
               <h2>Selecciona tu objetivo:</h2>
-              {imagenes[gender].states.map((state, index) => (
+              {imagenes[UsuarioActual.genero].states.map((state, index) => (
                 <Button key={index} onClick={() => handlePhysicalStateChange(state, objetivo[index])} label ={objetivo[index]}
                 isSelected={physicalState === state}/>
               ))}
             </div>
             
           )}
-          {gender && physicalState &&(
+          {UsuarioActual && UsuarioActual.genero && physicalState &&(
               <div>
                   <h2>Imagen seleccionada:</h2>
                   {physicalState ? (
@@ -400,7 +391,7 @@ import React, { useState, useEffect, useContext } from 'react';
           
           )}
 
-          {gender && physicalState && (
+          {UsuarioActual && UsuarioActual.genero && physicalState && (
           <div>
               <h2>Selecciona un atributo físico:</h2>
               {atributo.map((attr, index) => (
