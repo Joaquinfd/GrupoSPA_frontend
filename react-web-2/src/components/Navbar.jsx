@@ -11,14 +11,86 @@ function Navbar() {
   const { token, logout, scope } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  const [IdUsuario, setIdUsuario] = useState(null);
+  const [IdPlanner, setIdPlanner] = useState(null);
+  const [usuarioActual, setUsuarioActual] = useState(null);
+
   const [notifications, setNotifications] = useState([]);
   const [notificacionMostrar, setNotificacionMostrar] = useState(null);
   const [notificacionesMostradas, setNotificacionesMostradas] = useState([]);
 
+
+  useEffect(() => {
+    const getUserId = async () => {
+      try {
+        if (token){
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/auth/currentUsuario/token`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setIdUsuario(response.data.idUsuario);
+      }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const getUser = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/usuarios/${IdUsuario}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+          });
+        setUsuarioActual(response.data);
+        
+
+        console.log('getUser:', response.data);
+      } catch (error) {
+        alert(error);
+      }
+    };
+
+    if (IdUsuario) {
+      getUser();
+    } else {
+      getUserId();
+    }
+  }, [IdUsuario]);
+
+
+
+  useEffect(() => {
+    const getPlanner = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/planners/user/${IdUsuario}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        // Utiliza la respuesta directamente en lugar de almacenarla en un estado intermedio
+        const plannerId = response.data.planner.id;
+        setIdPlanner(plannerId);
+  
+      } catch (error) {
+        console.error('Hubo un error:', error);
+      }
+    };
+  
+    if (IdUsuario) {
+      getPlanner();
+    }
+  }, [IdUsuario, token]);
+
+
+
+
   useEffect(() => {
     const obtenerYCrearNotificaciones = async () => {
       try {
-        const response = await axios.get('http://localhost:3000/notificaciones');
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/notificaciones/4`);
         setNotifications(response.data);
         console.log('notificaciones obtenidas:', response.data.length);
         const fecha = new Date();
