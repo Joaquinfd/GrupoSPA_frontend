@@ -306,7 +306,7 @@ function Perfil() {
           </button>
           {mostrarOpciones && (
             <div className='opciones'>
-            <div><Link to='/notificaciones'>Notificaciones</Link></div>
+            
             <div><Link to='/crear-rutina'>Modificar rutina</Link></div>
             <div><a href="#división-oculta" onClick={() => { deleteUsuario() }}>Eliminar cuenta</a></div>
             </div>
