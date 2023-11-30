@@ -19,7 +19,7 @@ function Navbar() {
   const [notificacionMostrar, setNotificacionMostrar] = useState(null);
   const [notificacionesMostradas, setNotificacionesMostradas] = useState([]);
 
-
+  // useEffect para obtener el ID del usuario
   useEffect(() => {
     const getUserId = async () => {
       try {
@@ -33,11 +33,16 @@ function Navbar() {
       }
       } catch (error) {
         console.log(error);
+
+        
       }
     };
 
     const getUser = async () => {
       try {
+        if (token && IdUsuario){
+          console.log('token:', token);
+          console.log('IdUsuario:', IdUsuario);
         const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/usuarios/${IdUsuario}`, {
           headers: {
             Authorization: `Bearer ${token}`
@@ -47,8 +52,16 @@ function Navbar() {
         
 
         console.log('getUser:', response.data);
+      }
       } catch (error) {
-        alert(error);
+        console.error(error);
+        if (error.response && error.response.status === 404) {
+          // User not found, handle accordingly
+          console.log('Usuario eliminado');
+          // You may want to clear user-related state or perform other actions
+          setIdUsuario(null);
+          setUsuarioActual(null);
+        }
       }
     };
 
@@ -57,13 +70,13 @@ function Navbar() {
     } else {
       getUserId();
     }
-  }, [IdUsuario]);
+  }, [IdUsuario, token]);
 
-
-
+  // useEffect para obtener el ID del planner
   useEffect(() => {
     const getPlanner = async () => {
       try {
+        if (token) {
         const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/planners/user/${IdUsuario}`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -74,6 +87,13 @@ function Navbar() {
         const plannerId = response.data.planner.id;
         setIdPlanner(plannerId);
   
+        // Realiza la segunda solicitud con el ID del planner
+        const plannerResponse = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/planners/${plannerId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      }
       } catch (error) {
         console.error('Hubo un error:', error);
       }
@@ -84,13 +104,12 @@ function Navbar() {
     }
   }, [IdUsuario, token]);
 
-
-
-
+  // useEffect para obtener las notificaciones
   useEffect(() => {
     const obtenerYCrearNotificaciones = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/notificaciones/4`);
+        if (IdPlanner) {
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/notificaciones/${IdPlanner}`);
         setNotifications(response.data);
         console.log('notificaciones obtenidas:', response.data.length);
         const fecha = new Date();
@@ -121,6 +140,7 @@ function Navbar() {
             }
           }
         });
+      }
       } catch (error) {
         console.error(error);
       }
@@ -129,7 +149,7 @@ function Navbar() {
     const intervalId = setInterval(obtenerYCrearNotificaciones, 5000);
 
     return () => clearInterval(intervalId);
-  }, [notifications, notificacionesMostradas, notificacionMostrar]);
+  }, [notifications, notificacionesMostradas, notificacionMostrar, IdPlanner, token]);
   
 
   useEffect(() => {
