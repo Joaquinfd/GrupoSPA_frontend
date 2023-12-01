@@ -341,7 +341,7 @@ import API_URL from '../config';
       const handleTimeChange = (day, value) => {
         setTimes((prevTimes) => {
           const updatedTimes = { ...prevTimes };
-          updatedTimes[day].time = value;
+          updatedTimes[day].time = value + ":00";
           return updatedTimes;
         });
       };
@@ -465,7 +465,7 @@ import API_URL from '../config';
                             {times[day].checked && (
                               <TimePicker
                                 onChange={(value) => handleTimeChange(day, value)}
-                                value={times[day].time}
+                                value={times[day].time ? times[day].time.split(":")[0] : "00"}
                                 clockIcon={null}
                                 disableMinutes={true}
                               />
