@@ -42,8 +42,6 @@ function Navbar() {
     const getUser = async () => {
       try {
         if (token && IdUsuario){
-          console.log('token:', token);
-          console.log('IdUsuario:', IdUsuario);
         const response = await axios.get(`${API_URL}/usuarios/${IdUsuario}`, {
           headers: {
             Authorization: `Bearer ${token}`

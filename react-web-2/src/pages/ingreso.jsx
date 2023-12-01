@@ -48,7 +48,6 @@ function Ingreso() {
             // Se guarda el token en localStorage
             const access_token = respuesta.data.access_token;
             setToken(access_token); 
-            console.log(access_token);
             navigate('/mi-perfil');
 
             

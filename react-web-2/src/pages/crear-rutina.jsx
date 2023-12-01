@@ -79,7 +79,7 @@ import API_URL from '../config';
           setIdUsuario(response.data.idUsuario);
         }
         } catch (error) {
-          console.log(error);
+          console.error(error);
         }
       };
   
@@ -93,7 +93,7 @@ import API_URL from '../config';
           setUsuarioActual(response.data);
           setGender(response.data.genero)
 
-          console.log('getUser:', response.data);
+          console.log('getUser: usuario obtenido segun id');
         } catch (error) {
           alert(error);
         }
@@ -355,17 +355,6 @@ import API_URL from '../config';
       return (
           <div className='body-container'>
           <div className='rutinas-container'>
-          {/* <h2>Selecciona un género:</h2> */}
-          <div>
-            {/* <Button onClick={() => handleGenderChange()}label={'Comenzar'}  */}
-
-            {/* /> */}
-
-            {/* {console.log('RETURNNN usuarioActual', UsuarioActual)} */}
-
-            {/* gender = {UsuarioActual && UsuarioActual.genero} */}
-        
-          </div>
     
         
           {UsuarioActual && UsuarioActual.genero && (//requerir haber clickeado algun género

@@ -204,7 +204,7 @@ function Perfil() {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log(usuario_modificado);
+        console.log('usuario modificado:', usuario_modificado);
       } catch (error) {
         console.log(error);
       }

@@ -70,67 +70,6 @@ function Planner() {
 
 
 
-    // let handleRutina = async (event) => {
-
-    //     const bodyParameters = {
-    //         genero: 'Femenino',
-    //         objetivo: 'Bajar de peso',
-    //         atributo_fisico: 'Fuerza',
-    //     };
-  
-    //     const gender = bodyParameters.genero;
-    //     const objetivo = bodyParameters.objetivo;
-    //     const attribute = bodyParameters.atributo_fisico;
-
-  
-  
-    //     const apiUrl = `${import.meta.env.VITE_BACKEND_URL}/rutinas/${gender}/${objetivo}/${attribute}`;
-  
-    //     // Realizar la solicitud GET con Axios
-    //     axios.get(apiUrl)
-    //     .then(response => {
-    //       setRutinasDisponibles(response.data);
-    //       console.log('Rutinas disponibles:', rutinasDisponibles)
-  
-    //       // Acceder a cada rutina individual dentro del array
-    //       response.data.forEach(rutina => {
-    //         // Acceder a cada propiedad de la rutina
-    //         const nombreRutina = rutina.nombre_rutina;
-    //         const genero = rutina.genero;
-    //         const objetivo = rutina.objetivo;
-    //         const atributoFisico = rutina.atributo_fisico;
-    //         const dificultad = rutina.dificultad_rutina;
-    //         const id = rutina.id;
-    //       });
-          
-    //     })
-    //     .catch(error => {
-    //       console.error('Hubo un error:', error);
-    //     });
-    // };
-
-    // useEffect (() => {handleRutina();}, []);
-
-
-    // const generarEventosRutinas = () => {
-
-    //     const eventosRutinas = [];
-
-    //     rutinasDisponibles.forEach(rutina => {
-    //         eventosRutinas.push({
-    //             title: rutina.nombre_rutina,
-    //             start: new Date(2023, 9, 10, 12, 0), // Año, mes (0-11), día, hora, minuto
-    //             end: new Date(2023, 9, 12, 12, 0),
-    //             descripcion: [rutina.descripcion],
-    //             // Asegúrate de agregar las propiedades necesarias según la estructura de tus datos
-    //         });
-    //     });
-
-    //     return eventosRutinas;
-    // };
-
-    // useEffect (() => {generarEventosRutinas();}, [rutinasDisponibles]);
-
     const generarEventosRutinas = () => {
       console.log('dentro de generarEventosRutinas AHORA', plannerInfo.dias);
       const eventosRutinas = [];
