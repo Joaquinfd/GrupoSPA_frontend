@@ -31,7 +31,7 @@ export default function Home() {
 
     // useeffect para imprimir en consola la version
 
-    UseEffect(() => {
+    useEffect(() => {
         const getVersion = async () => {
             console.log('Version: 1.0.0');
         };
