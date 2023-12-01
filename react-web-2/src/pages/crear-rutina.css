@@ -133,11 +133,21 @@ input[type="checkbox"] {
 input[type="checkbox"]:checked::before {
   content: "x";
   color: red;
+  display: flex;
+  justify-content: center;
 }
 
 .time-picker-rutina {
   height: 80px;
+  width: 30% !important;
 }
 
+.select-horarios-rutina {
+  height: 80px;
+  width: 100px;
+  font-size: large;
+  border-radius: 5px;
+  border-color: red;
+}
 
 
