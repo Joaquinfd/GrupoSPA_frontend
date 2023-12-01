@@ -341,7 +341,9 @@ import API_URL from '../config';
       const handleTimeChange = (day, value) => {
         setTimes((prevTimes) => {
           const updatedTimes = { ...prevTimes };
-          updatedTimes[day].time = value + ":00";
+          // Agregar minutos fijos a 00
+          const formattedTime = value ? `${value.split(':')[0]}:00` : null;
+          updatedTimes[day].time = formattedTime;
           return updatedTimes;
         });
       };
@@ -465,9 +467,8 @@ import API_URL from '../config';
                             {times[day].checked && (
                               <TimePicker
                                 onChange={(value) => handleTimeChange(day, value)}
-                                value={times[day].time ? times[day].time.split(":")[0] : "12"}
+                                value={times[day].time}
                                 clockIcon={null}
-                                disableMinutes={true}
                               />
                             )}
                           </td>
