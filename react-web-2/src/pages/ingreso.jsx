@@ -3,6 +3,7 @@ import './ingreso.css';
 import { BrowserRouter as Router, Route, Link, useNavigate  } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../auth/authContext';
+import API_URL from '../config';
 
 
 function Ingreso() {
@@ -41,7 +42,7 @@ function Ingreso() {
             contraseña: inputPassword
           };
         try {
-            const respuesta = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/usuarios/login`, loginData);
+            const respuesta = await axios.post(`${API_URL}/auth/usuarios/login`, loginData);
 
 
             // Se guarda el token en localStorage
@@ -79,7 +80,7 @@ function Ingreso() {
         };
 
         try {
-            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/usuarios/signup`, bodyParameters);
+            const response = await axios.post(`${API_URL}/auth/usuarios/signup`, bodyParameters);
             console.log(response.data); 
             console.log('Usuario creado: ', bodyParameters);
             const access_token = response.data.access_token;

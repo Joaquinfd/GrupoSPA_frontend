@@ -3,6 +3,7 @@ import './perfil.css'
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { AuthContext } from '../auth/authContext';
+import API_URL from '../config';
 
 
 function Perfil() {
@@ -32,7 +33,7 @@ function Perfil() {
       const getUserId = async () => {
         try {
           if (token){
-          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/auth/currentUsuario/token`, {
+          const response = await axios.get(`${API_URL}/auth/currentUsuario/token`, {
             headers: {
               Authorization: `Bearer ${token}`
             }
@@ -49,7 +50,7 @@ function Perfil() {
   
       const getUser = async () => {
         try {
-          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/usuarios/${IdUsuario}`, {
+          const response = await axios.get(`${API_URL}/usuarios/${IdUsuario}`, {
             headers: {
               Authorization: `Bearer ${token}`
             }
@@ -99,7 +100,7 @@ function Perfil() {
 
     const deleteUsuario = async () => {
       try {
-          const usuario_eliminado = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/usuarios/${IdUsuario}`, {
+          const usuario_eliminado = await axios.delete(`${API_URL}/usuarios/${IdUsuario}`, {
             headers: {
             Authorization: `Bearer ${token}`
             }
@@ -195,7 +196,7 @@ function Perfil() {
         peso: cambios.peso || UsuarioActual.peso,
       };
   
-      const url = `${import.meta.env.VITE_BACKEND_URL}/usuarios/${IdUsuario}`;
+      const url = `${API_URL}/usuarios/${IdUsuario}`;
   
       try {
         const usuario_modificado = await axios.patch(url, bodyData, {

@@ -23,7 +23,7 @@ const obtenerEjercicios = () => {
   useEffect(() => {
     const fetchEjercicios = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/ejercicios`);
+        const response = await axios.get(`${API_URL}/ejercicios`);
         setEjercicios(response.data);
       } catch (error) {
         console.error('Error al obtener la lista de ejercicios:', error);

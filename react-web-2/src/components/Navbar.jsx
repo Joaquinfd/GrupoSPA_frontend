@@ -4,6 +4,7 @@ import './Navbar.css';
 import logo from '../../public/images/logo_inicio.png';
 import { AuthContext } from '../auth/authContext';
 import axios from 'axios';
+import API_URL from '../config';
 
 
 
@@ -24,7 +25,7 @@ function Navbar() {
     const getUserId = async () => {
       try {
         if (token){
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/auth/currentUsuario/token`, {
+        const response = await axios.get(`${API_URL}/auth/currentUsuario/token`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -43,7 +44,7 @@ function Navbar() {
         if (token && IdUsuario){
           console.log('token:', token);
           console.log('IdUsuario:', IdUsuario);
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/usuarios/${IdUsuario}`, {
+        const response = await axios.get(`${API_URL}/usuarios/${IdUsuario}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -77,7 +78,7 @@ function Navbar() {
     const getPlanner = async () => {
       try {
         if (token) {
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/planners/user/${IdUsuario}`, {
+        const response = await axios.get(`${API_URL}/planners/user/${IdUsuario}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -88,7 +89,7 @@ function Navbar() {
         setIdPlanner(plannerId);
   
         // Realiza la segunda solicitud con el ID del planner
-        const plannerResponse = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/planners/${plannerId}`, {
+        const plannerResponse = await axios.get(`${API_URL}/planners/${plannerId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -109,7 +110,7 @@ function Navbar() {
     const obtenerYCrearNotificaciones = async () => {
       try {
         if (IdPlanner) {
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/notificaciones/${IdPlanner}`);
+        const response = await axios.get(`${API_URL}/notificaciones/${IdPlanner}`);
         setNotifications(response.data);
         console.log('notificaciones obtenidas:', response.data.length);
         const fecha = new Date();

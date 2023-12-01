@@ -24,6 +24,7 @@ import React, { useState, useEffect, useContext } from 'react';
 
   import axios from 'axios';
   import { set } from 'date-fns';
+import API_URL from '../config';
 
   
 
@@ -70,7 +71,7 @@ import React, { useState, useEffect, useContext } from 'react';
       const getUserId = async () => {
         try {
           if (token){
-          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/auth/currentUsuario/token`, {
+          const response = await axios.get(`${API_URL}/auth/currentUsuario/token`, {
             headers: {
               Authorization: `Bearer ${token}`
             }
@@ -84,7 +85,7 @@ import React, { useState, useEffect, useContext } from 'react';
   
       const getUser = async () => {
         try {
-          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/usuarios/${IdUsuario}`, {
+          const response = await axios.get(`${API_URL}/usuarios/${IdUsuario}`, {
             headers: {
               Authorization: `Bearer ${token}`
             }
@@ -110,7 +111,7 @@ import React, { useState, useEffect, useContext } from 'react';
   useEffect(() => {
     const getPlanner = async () => {
       try {
-        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/planners/user/${IdUsuario}`, {
+        const response = await axios.get(`${API_URL}/planners/user/${IdUsuario}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -183,7 +184,7 @@ import React, { useState, useEffect, useContext } from 'react';
       let handleGetRutina = async () => {
         try {
           // 1. Obtener todas las rutinas disponibles
-          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/rutinas`);
+          const response = await axios.get(`${API_URL}/rutinas`);
       
           const todasLasRutinas = response.data;
       
@@ -219,7 +220,7 @@ import React, { useState, useEffect, useContext } from 'react';
 
       let handleGetEjercicios = async (rutinaId) => {
         try {
-          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/rutinas/${rutinaId}/ejercicios`);
+          const response = await axios.get(`${API_URL}/rutinas/${rutinaId}/ejercicios`);
           let { ejercicios } = response.data;
           setEjerciciosRutina(ejercicios);
           setMostrarEjercicios(true)
@@ -293,7 +294,7 @@ import React, { useState, useEffect, useContext } from 'react';
               IdRutina: IdRutina,
             }
 
-            const url = `${import.meta.env.VITE_BACKEND_URL}/planners/times/${idPLanner}`;
+            const url = `${API_URL}/planners/times/${idPLanner}`;
             axios.patch(url, data, {
               headers: {
                 Authorization: `Bearer ${token}`

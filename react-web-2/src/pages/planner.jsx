@@ -10,6 +10,7 @@ import axios from 'axios';
 import { AuthContext } from '../auth/authContext';
 import { set } from 'date-fns';
 import { id } from 'date-fns/locale';
+import API_URL from '../config';
 
 function Planner() {
 
@@ -32,7 +33,7 @@ function Planner() {
       const getUserId = async () => {
         try {
           if (token){
-          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/auth/currentUsuario/token`, {
+          const response = await axios.get(`${API_URL}/auth/currentUsuario/token`, {
             headers: {
               Authorization: `Bearer ${token}`
             }
@@ -46,7 +47,7 @@ function Planner() {
   
       const getUser = async () => {
         try {
-          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/usuarios/${IdUsuario}`, {
+          const response = await axios.get(`${API_URL}/usuarios/${IdUsuario}`, {
             headers: {
               Authorization: `Bearer ${token}`
             }
@@ -205,7 +206,7 @@ function Planner() {
     useEffect(() => {
       const getPlanner = async () => {
         try {
-          const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/planners/user/${IdUsuario}`, {
+          const response = await axios.get(`${API_URL}/planners/user/${IdUsuario}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -216,7 +217,7 @@ function Planner() {
           setIdPlanner(plannerId);
     
           // Realiza la segunda solicitud con el ID del planner
-          const plannerResponse = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/planners/${plannerId}`, {
+          const plannerResponse = await axios.get(`${API_URL}/planners/${plannerId}`, {
             headers: {
               Authorization: `Bearer ${token}`,
             },
