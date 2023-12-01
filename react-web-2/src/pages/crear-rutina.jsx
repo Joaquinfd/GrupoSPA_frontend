@@ -341,9 +341,7 @@ import API_URL from '../config';
       const handleTimeChange = (day, value) => {
         setTimes((prevTimes) => {
           const updatedTimes = { ...prevTimes };
-          // Agregar minutos fijos a 00
-          const formattedTime = value ? `${value.split(':')[0]}:00` : null;
-          updatedTimes[day].time = formattedTime;
+          updatedTimes[day].time = value;
           return updatedTimes;
         });
       };
