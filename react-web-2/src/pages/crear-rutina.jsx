@@ -24,7 +24,7 @@ import React, { useState, useEffect, useContext } from 'react';
 
   import axios from 'axios';
   import { set } from 'date-fns';
-import API_URL from '../config';
+  import API_URL from '../config';
 
   
 
@@ -254,12 +254,12 @@ import API_URL from '../config';
               console.log('horario.time:', horario.time, 'tipo:', typeof horario.time);
 
               // Realiza las acciones que necesitas con cada día y sus horarios aquí
-              if (horario.checked && !horario.time) {
+              if (horario.checked && horario.time === null) {
                 // si esta checkeado el dia pero no tiene hora
                 alert('Debes seleccionar una hora para los días que quieras entrenar');
               }
 
-              else if (horario.checked && horario.time) {
+              else if (horario.checked && horario.time >= 0 && horario.time <= 23) {
                 // si esta checkeado y tiene hora
                 dias_entrenamiento.push(day);  
                 setHacerPatch(true);              
@@ -315,13 +315,13 @@ import API_URL from '../config';
       };
 
       const [times, setTimes] = useState({
-        Lunes: { checked: false, time: '12:00' },
-        Martes: { checked: false, time: '12:00' },
-        Miercoles: { checked: false, time: '12:00' },
-        Jueves: { checked: false, time: '12:00' },
-        Viernes: { checked: false, time: '12:00' },
-        Sabado: { checked: false, time: '12:00' },
-        Domingo: { checked: false, time: '12:00' },
+        Lunes: { checked: false, time: '0:00' },
+        Martes: { checked: false, time: '0:00' },
+        Miercoles: { checked: false, time: '0:00' },
+        Jueves: { checked: false, time: '0:00' },
+        Viernes: { checked: false, time: '0:00' },
+        Sabado: { checked: false, time: '0:00' },
+        Domingo: { checked: false, time: '0:00' },
       });
     
       const handleCheckboxChange = (day) => {
@@ -329,21 +329,18 @@ import API_URL from '../config';
           const updatedTimes = { ...prevTimes };
           updatedTimes[day].checked = !updatedTimes[day].checked;
     
-          // If the checkbox is checked, set the time to null
-          if (updatedTimes[day].checked) {
-            updatedTimes[day].time = null;
-          }
-    
           return updatedTimes;
         });
       };
     
-      const handleTimeChange = (day, value) => {
+      const handleTimeChange = (day, event) => {
+        const value = event.target.value;
+        
+        if (value)
         setTimes((prevTimes) => {
           const updatedTimes = { ...prevTimes };
-          // Verificar si el valor es nulo o vacío
-          const formattedTime = value ? `${value.split(':')[0]}:00` : '12:00'; // Establecer una hora por defecto
-          updatedTimes[day].time = formattedTime;
+          updatedTimes[day].time = value;
+    
           return updatedTimes;
         });
       };
@@ -465,11 +462,17 @@ import API_URL from '../config';
                           </td>
                           <td className='time-picker-rutina'>
                             {times[day].checked && (
-                              <TimePicker
-                                onChange={(value) => handleTimeChange(day, value)}
+                              <select
+                                className='select-horarios-rutina'
                                 value={times[day].time}
-                                clockIcon={null}
-                              />
+                                onChange={(event) => handleTimeChange(day, event)}
+                              >
+                                {[...Array(24).keys()].map((hour) => (
+                                  <option key={hour} value={`${hour}:00`}>
+                                    {`${hour}:00`}
+                                  </option>
+                                ))}
+                              </select>
                             )}
                           </td>
                         </tr>
