@@ -341,7 +341,9 @@ import API_URL from '../config';
       const handleTimeChange = (day, value) => {
         setTimes((prevTimes) => {
           const updatedTimes = { ...prevTimes };
-          updatedTimes[day].time = value;
+          // Verificar si el valor es nulo o vacío
+          const formattedTime = value ? `${value.split(':')[0]}:00` : '12:00'; // Establecer una hora por defecto
+          updatedTimes[day].time = formattedTime;
           return updatedTimes;
         });
       };

@@ -12,6 +12,7 @@ import {
   MenuItem,
 } from '@mui/material';
 import './agregarEjercicios.css';
+import API_URL from '../config';
 
 function ActualizarEjercicio() {
   const navigate = useNavigate();
@@ -25,7 +26,7 @@ function ActualizarEjercicio() {
 
   const handleUpdateEjercicio = async () => {
     try {
-      const response = await axios.patch(`${import.meta.env.VITE_BACKEND_URL}/ejercicios/${ejercicioIdToUpdate}`, {
+      const response = await axios.patch(`${API_URL}/ejercicios/${ejercicioIdToUpdate}`, {
         nombre_ejercicio: nombre,
         dificultad,
         grupo_muscular: grupoMuscular,

@@ -12,6 +12,7 @@ import {
   Select,
 } from '@mui/material';
 import './agregarEjercicios.css';
+import API_URL from '../config';
 
 function CrearEjercicios() {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ function CrearEjercicios() {
       return;
     }
     try {
-      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/ejercicios`, {
+      const response = await axios.post(`${API_URL}/ejercicios`, {
         nombre_ejercicio: nombre,
         dificultad,
         grupo_muscular: grupoMuscular,

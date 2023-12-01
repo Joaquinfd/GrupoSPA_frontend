@@ -14,6 +14,7 @@ import {
   TablePagination,
 } from '@mui/material';
 import './agregarEjercicios.css';
+import API_URL from '../config';
 
 const obtenerEjercicios = () => {
   const [ejercicios, setEjercicios] = useState([]);

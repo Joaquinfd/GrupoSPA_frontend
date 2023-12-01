@@ -12,6 +12,7 @@ import {
   DialogActions,
 } from '@mui/material';
 import './agregarEjercicios.css';
+import API_URL from '../config';
 
 //Hecho con ChatGPT
 function EliminarEjercicios() {
@@ -34,7 +35,7 @@ function EliminarEjercicios() {
       return;
     }
     try {
-      const response = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/ejercicios/${ejercicioIdToDelete}`);
+      const response = await axios.delete(`${API_URL}/ejercicios/${ejercicioIdToDelete}`);
       setDeleteMessage({ type: 'success', content: 'Ejercicio eliminado exitosamente' });
       handleCloseDeleteConfirmation();
       console.log('Ejercicio eliminado:', response.data);
