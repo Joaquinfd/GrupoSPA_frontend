@@ -465,7 +465,7 @@ import API_URL from '../config';
                             {times[day].checked && (
                               <TimePicker
                                 onChange={(value) => handleTimeChange(day, value)}
-                                value={times[day].time ? times[day].time.split(":")[0] : "00"}
+                                value={times[day].time ? times[day].time.split(":")[0] : "12"}
                                 clockIcon={null}
                                 disableMinutes={true}
                               />
