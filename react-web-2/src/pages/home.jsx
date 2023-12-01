@@ -29,6 +29,15 @@ export default function Home() {
 
     ];
 
+    // useeffect para imprimir en consola la version
+
+    UseEffect(() => {
+        const getVersion = async () => {
+            console.log('Version: 1.0.0');
+        };
+        getVersion();
+    });
+
     return (
         <div className="home-main-container" id='home-div-hmc'>
             <div className="home-container" id='home-div-hc'>
