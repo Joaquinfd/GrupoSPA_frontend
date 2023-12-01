@@ -154,7 +154,7 @@ function Navbar() {
   useEffect(() => {
     // Aquí puedes agregar la lógica para mostrar tu notificación (puedes reemplazar la alerta)
     if (notificacionMostrar) {
-      alert('Notificación: ' + notificacionMostrar.contenido);
+      alert('Notificación: Hora de entrenar');
       // Limpiar el estado de notificacionMostrar después de mostrar la alerta
       setNotificacionMostrar(null);
     }

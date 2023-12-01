@@ -28,7 +28,6 @@ import API_URL from '../config';
 
   
 
-  // Hecho con ayuda de ChatGPT
   function Images() {
       let [gender, setGender] = useState(null); // Inicialmente, no se selecciona ningún género
       let [physicalState, setPhysicalState] = useState(null); // Estado físico seleccionado, null al principio
@@ -239,7 +238,9 @@ import API_URL from '../config';
           Object.keys(times).forEach((day) => {
             horarios[day.toLowerCase()] = {
               checked: times[day].checked,
-              time: times[day].checked ? parseInt(times[day].time.split(':')[0]) : null,
+              time: times[day].checked
+                ? `${parseInt(times[day].time.split(':')[0])}:00`
+                : '00:00', // Establecer '00' como minutos por defecto
             };
           });
       
@@ -278,11 +279,6 @@ import API_URL from '../config';
               }
             }
           }
-
-          // if (dias_entrenamiento.length >= 1) {
-          //   // si tiene al menos un día
-          //   setHorariosCorrectos(true);
-          // }
 
           if (dias_entrenamiento.length >= 1) {
             // Si todos los horarios fueron ingresados correctamente...
@@ -473,6 +469,7 @@ import API_URL from '../config';
                                 onChange={(value) => handleTimeChange(day, value)}
                                 value={times[day].time}
                                 clockIcon={null}
+                                disableMinutes={true}
                               />
                             )}
                           </td>
