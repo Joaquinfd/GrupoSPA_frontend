@@ -33,7 +33,7 @@ export default function Home() {
 
     useEffect(() => {
         const getVersion = async () => {
-            console.log('Version: 1.0.0');
+            console.log('Version: 1.0.1');
         };
         getVersion();
     });

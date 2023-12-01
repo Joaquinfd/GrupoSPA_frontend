@@ -238,9 +238,7 @@ import API_URL from '../config';
           Object.keys(times).forEach((day) => {
             horarios[day.toLowerCase()] = {
               checked: times[day].checked,
-              time: times[day].checked
-                ? `${parseInt(times[day].time.split(':')[0])}:00`
-                : '00:00', // Establecer '00' como minutos por defecto
+              time: times[day].checked ? parseInt(times[day].time.split(':')[0]) : null,
             };
           });
       
