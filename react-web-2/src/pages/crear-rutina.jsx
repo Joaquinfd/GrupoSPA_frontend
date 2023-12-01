@@ -467,7 +467,7 @@ import API_URL from '../config';
                                 onChange={(value) => handleTimeChange(day, value)}
                                 value={times[day].time}
                                 clockIcon={null}
-                                disableMinutes={true}
+                                clearIcon={<span style={{ display: 'none' }}>X</span>}
                               />
                             )}
                           </td>
