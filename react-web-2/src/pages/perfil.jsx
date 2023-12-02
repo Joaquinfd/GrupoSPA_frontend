@@ -250,8 +250,8 @@ function Perfil() {
             {editandoSexo ? (
               <>
                 <select type="text" value={nuevoSexo} onChange={handleCambioSexo}>
-                  <option value="Masculino">Masculino</option>
-                  <option value="Femenino">Femenino</option>
+                  <option value="masculino">Masculino</option>
+                  <option value="femenino">Femenino</option>
                   </select> 
                 <a className='boton-cambio-atributo' onClick={confirmarCambios}>Confirmar</a>
               </>
