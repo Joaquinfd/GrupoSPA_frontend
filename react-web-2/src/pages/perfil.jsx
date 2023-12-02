@@ -100,7 +100,7 @@ function Perfil() {
 
     const deleteUsuario = async () => {
       try {
-          const usuario_eliminado = await axios.delete(`${API_URL}/usuarios/${IdUsuario}`, {
+          const usuario_eliminado = await axios.delete(`${API_URL}/auth/${IdUsuario}`, {
             headers: {
             Authorization: `Bearer ${token}`
             }
